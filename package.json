@@ -1,0 +1,57 @@
+{
+    "name": "koatty_logger",
+    "version": "1.0.4",
+    "description": "Logger for koatty.",
+    "scripts": {
+        "build": "del-cli --force dist && tsc",
+        "prepublishOnly": "npm test && npm run build",
+        "test": "tslint 'src/**/*.ts'"
+    },
+    "main": "./dist/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/thinkkoa/koatty_logger.git"
+    },
+    "keywords": [
+        "web",
+        "typescript",
+        "framework",
+        "mvc",
+        "koa2",
+        "restful",
+        "agile",
+        "koatty_logger",
+        "thinkkoa"
+    ],
+    "engines": {
+        "node": ">10.0.0"
+    },
+    "author": {
+        "name": "richenlin",
+        "email": "richenlin@gmail.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/thinkkoa/koatty_logger/issues"
+    },
+    "homepage": "https://github.com/thinkkoa/koatty_logger",
+    "maintainers": [
+        {
+            "name": "richenlin",
+            "email": "richenlin@gmail.com"
+        }
+    ],
+    "devDependencies": {
+        "@types/koa": "^2.x.x",
+        "@types/lodash": "^4.x.x",
+        "@types/node": "^12.x.x",
+        "del-cli": "^3.0.1",
+        "ts-node": "^9.0.0",
+        "tslint": "^6.1.3",
+        "tslint-config-alloy": "^0.2.1",
+        "typescript": "^4.1.2"
+    },
+    "dependencies": {
+        "koatty_lib": "^1.x.x"
+    }
+}

@@ -2,12 +2,11 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: linyyyang<linyyyang@tencent.com>
- * @LastEditTime: 2020-11-27 16:33:35
+ * @LastEditTime: 2020-12-03 15:10:12
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
 import fs from "fs";
-import os from "os";
 import util from "util";
 import * as helper from "koatty_lib";
 
@@ -94,8 +93,8 @@ export class Logger {
      * getLogConsole
      */
     public getLogConsole() {
-        if (process.env.NODE_ENV === 'development') {
-            this.logConsole = true;
+        if (process.env.NODE_ENV === 'production') {
+            this.logConsole = false;
         }
         return this.logConsole;
     }
@@ -158,11 +157,11 @@ export class Logger {
      * @private
      * @param {LogLevelType} level
      * @param {string} name
-     * @param {*} args
-     * @returns {*} 
+     * @param {any[]} args
+     * @returns {any[]} 
      * @memberof Logger
      */
-    private format(level: LogLevelType, name: string, args: any) {
+    private format(level: LogLevelType, name: string, args: any[]) {
         try {
             // tslint:disable-next-line: one-variable-per-declaration
             let params: any[] = [];
@@ -234,18 +233,18 @@ export class Logger {
      * @param {LogLevelType} level
      * @param {string} name
      * @param {any[]} msgs
-     * @param {boolean} [formated=false]
+     * @param {boolean} [formatted=false]
      * @returns {*}  {Promise<any>}
      * @memberof Logger
      */
-    private async writeLogFile(level: LogLevelType, name: string, msgs: any[], formated = false): Promise<any> {
+    private async writeLogFile(level: LogLevelType, name: string, msgs: any[], formatted = false): Promise<any> {
         try {
             const logFilePath = this.getLogFilePath();
             if (!helper.isDir(logFilePath)) {
                 await helper.mkDir(logFilePath);
             }
             let params = msgs;
-            if (!formated) {
+            if (!formatted) {
                 params = this.format(level, name, msgs);
             }
             name = name !== "" ? name : level;
@@ -264,16 +263,6 @@ export class Logger {
     }
 
     /**
-     * log Info
-     *
-     * @returns {*} 
-     * @memberof Logger
-     */
-    public Info(...args: any[]) {
-        return this.print("INFO", "", "white", args);
-    }
-
-    /**
      * log Debug
      *
      * @returns {*} 
@@ -281,6 +270,16 @@ export class Logger {
      */
     public Debug(...args: any[]) {
         return this.print("DEBUG", "", "blue", args);
+    }
+
+    /**
+     * log Info
+     *
+     * @returns {*} 
+     * @memberof Logger
+     */
+    public Info(...args: any[]) {
+        return this.print("INFO", "", "white", args);
     }
 
     /**

@@ -1,6 +1,6 @@
 {
     "name": "koatty_logger",
-    "version": "1.0.4",
+    "version": "1.1.1",
     "description": "Logger for koatty.",
     "scripts": {
         "build": "del-cli --force dist && tsc",
@@ -42,8 +42,6 @@
         }
     ],
     "devDependencies": {
-        "@types/koa": "^2.x.x",
-        "@types/lodash": "^4.x.x",
         "@types/node": "^12.x.x",
         "del-cli": "^3.0.1",
         "ts-node": "^9.0.0",

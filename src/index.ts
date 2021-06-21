@@ -1,8 +1,8 @@
 /*
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
- * @LastEditors: linyyyang<linyyyang@tencent.com>
- * @LastEditTime: 2020-12-03 15:10:12
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-06-21 17:41:45
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -207,6 +207,10 @@ export class Logger {
      */
     private print(level: LogLevelType, name: string, color: string, args: any[]) {
         try {
+            const logLevel = this.getLevel();
+            if (LogLevelObj[level] < LogLevelObj[logLevel]) {
+                return
+            }
             let formatted = false;
             // print console
             if (this.getLogConsole()) {
@@ -217,8 +221,7 @@ export class Logger {
                 console.log.apply(null, [style[0], ...args, style[1]]);
             }
             // record log files
-            const logLevel = this.getLevel();
-            if (this.getLogFile() && LogLevelObj[level] >= LogLevelObj[logLevel]) {
+            if (this.getLogFile()) {
                 this.writeLogFile(level, name, args, formatted);
             }
         } catch (e) {

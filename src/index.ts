@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-06-21 17:41:45
+ * @LastEditTime: 2021-06-22 10:26:38
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -54,6 +54,7 @@ interface LoggerOpt {
     logLevel?: LogLevelType;
     logConsole?: boolean;
     logFile?: boolean;
+    logFileLevel?: LogLevelType;
     logFilePath?: string;
 }
 
@@ -63,23 +64,68 @@ interface LoggerOpt {
  * @class Logger
  */
 export class Logger {
-    // 默认是最初的日志级别，改变这个值。可以改变日志输出的结果
-    private logLevel = "DEBUG";
+    // 控制台日志级别
+    private logLevel = "INFO";
     // 默认打开控制台日志
     private logConsole = true;
     // 空对象
-    private emptyObj: any;
+    private emptyObj: any = {};
     // 文件日志开关
     private logFile = false;
+    // 文件日志级别
+    private logFileLevel = "WARN";
     // 文件日志路径
     private logFilePath: string;
 
     /**
-     * Creates an instance of ConsolePlus.
-     * @memberof ConsolePlus
+     * Creates an instance of Logger.
+     * @param {LoggerOpt} [opt]
+     * @memberof Logger
      */
-    constructor() {
-        this.emptyObj = {};
+    constructor(opt ?: LoggerOpt) {
+        if (process.env.LOGS_LEVEL && LogLevelObj[process.env.LOGS_LEVEL]) {
+            this.logLevel = process.env.LOGS_LEVEL;
+            this.logFileLevel = process.env.LOGS_LEVEL;
+        }
+        if (process.env.NODE_ENV === 'production') {
+            this.logConsole = false;
+            this.logFile = true;
+            this.logFileLevel = "INFO";
+        }
+        if (process.env.LOGS_WRITE) {
+            this.logFile = !!process.env.LOGS_WRITE;
+        }
+        if (process.env.LOGS_PATH) {
+            this.logFilePath = process.env.LOGS_PATH;
+        }
+        if (!helper.isTrueEmpty(opt)) {
+            this.logLevel = opt.logLevel ?? this.logLevel;
+            this.logConsole = opt.logConsole ?? this.logConsole;
+            this.logFile = opt.logFile ?? this.logFile;
+            this.logFileLevel = opt.logFileLevel ?? this.logFileLevel;
+            this.logFilePath = opt.logFilePath ?? this.logFilePath;
+        }
+    }
+
+    /**
+     * getLevel
+     */
+     public getLevel() {
+        return this.logLevel;
+    }
+    
+    /**
+     * setLevel
+     */
+     public setLevel(level: LogLevelType) {
+        this.logLevel = level;
+    }
+
+    /**
+     * getLogConsole
+     */
+     public getLogConsole() {
+        return this.logConsole;
     }
 
     /**
@@ -90,30 +136,10 @@ export class Logger {
     }
 
     /**
-     * getLogConsole
+     * getLogFile
      */
-    public getLogConsole() {
-        if (process.env.NODE_ENV === 'production') {
-            this.logConsole = false;
-        }
-        return this.logConsole;
-    }
-
-    /**
-     * setLevel
-     */
-    public setLevel(level: LogLevelType) {
-        this.logLevel = level;
-    }
-
-    /**
-     * getLevel
-     */
-    public getLevel() {
-        if (process.env.LOGS_LEVEL && LogLevelObj[process.env.LOGS_LEVEL]) {
-            this.logLevel = process.env.LOGS_LEVEL;
-        }
-        return this.logLevel;
+     public getLogFile() {
+        return this.logFile;
     }
 
     /**
@@ -124,31 +150,31 @@ export class Logger {
     }
 
     /**
-     * getLogFile
+     * getLogFileLevel
      */
-    public getLogFile() {
-        if (process.env.LOGS_WRITE) {
-            this.logFile = !!process.env.LOGS_WRITE;
-        }
-        return this.logFile;
+     public getLogFileLevel() {
+        return this.logFileLevel;
     }
 
+    /**
+     * setLogFileLevel
+     */
+    public setLogFileLevel(level: LogLevelType) {
+        this.logFileLevel = level;
+    }
+
+    /**
+     * getLogFilePath
+     */
+     public getLogFilePath() {
+        return this.logFilePath;
+    }
 
     /**
      * setLogPath
      */
     public setLogFilePath(path: string) {
         this.logFilePath = path;
-    }
-
-    /**
-     * getLogFilePath
-     */
-    public getLogFilePath() {
-        if (process.env.LOGS_PATH) {
-            this.logFilePath = process.env.LOGS_PATH;
-        }
-        return this.logFilePath;
     }
 
     /**

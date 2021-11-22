@@ -2,17 +2,19 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-06-22 10:26:38
+ * @LastEditTime: 2021-11-22 18:40:09
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
 import fs from "fs";
-import util from "util";
+import util, { promisify } from "util";
 import * as helper from "koatty_lib";
+import { ShieldLog } from "./shield";
 
-const fsOpen = util.promisify(fs.open);
-const fsAppend = util.promisify(fs.appendFile);
-const fsClose = util.promisify(fs.close);
+const fsOpen = promisify(fs.open);
+const fsAppend = promisify(fs.appendFile);
+const fsClose = promisify(fs.close);
+
 
 const styles: any = {
     'bold': ['\x1B[1m', '\x1B[22m'],
@@ -56,6 +58,7 @@ interface LoggerOpt {
     logFile?: boolean;
     logFileLevel?: LogLevelType;
     logFilePath?: string;
+    sensFields?: Set<string>;
 }
 
 /**
@@ -76,13 +79,15 @@ export class Logger {
     private logFileLevel = "WARN";
     // 文件日志路径
     private logFilePath: string;
+    // 脱敏字段
+    private sensFields: Set<string> = new Set();
 
     /**
      * Creates an instance of Logger.
      * @param {LoggerOpt} [opt]
      * @memberof Logger
      */
-    constructor(opt ?: LoggerOpt) {
+    constructor(opt?: LoggerOpt) {
         if (process.env.LOGS_LEVEL && LogLevelObj[process.env.LOGS_LEVEL]) {
             this.logLevel = process.env.LOGS_LEVEL;
             this.logFileLevel = process.env.LOGS_LEVEL;
@@ -104,27 +109,28 @@ export class Logger {
             this.logFile = opt.logFile ?? this.logFile;
             this.logFileLevel = opt.logFileLevel ?? this.logFileLevel;
             this.logFilePath = opt.logFilePath ?? this.logFilePath;
+            this.sensFields = opt.sensFields ?? this.sensFields;
         }
     }
 
     /**
      * getLevel
      */
-     public getLevel() {
+    public getLevel() {
         return this.logLevel;
     }
-    
+
     /**
      * setLevel
      */
-     public setLevel(level: LogLevelType) {
+    public setLevel(level: LogLevelType) {
         this.logLevel = level;
     }
 
     /**
      * getLogConsole
      */
-     public getLogConsole() {
+    public getLogConsole() {
         return this.logConsole;
     }
 
@@ -138,7 +144,7 @@ export class Logger {
     /**
      * getLogFile
      */
-     public getLogFile() {
+    public getLogFile() {
         return this.logFile;
     }
 
@@ -152,7 +158,7 @@ export class Logger {
     /**
      * getLogFileLevel
      */
-     public getLogFileLevel() {
+    public getLogFileLevel() {
         return this.logFileLevel;
     }
 
@@ -166,7 +172,7 @@ export class Logger {
     /**
      * getLogFilePath
      */
-     public getLogFilePath() {
+    public getLogFilePath() {
         return this.logFilePath;
     }
 
@@ -175,6 +181,19 @@ export class Logger {
      */
     public setLogFilePath(path: string) {
         this.logFilePath = path;
+    }
+    /**
+     * getSensFields
+     */
+    public getSensFields() {
+        return this.sensFields;
+    }
+
+    /**
+     * setSensFields
+     */
+    public setSensFields(fields: string[]) {
+        this.sensFields = new Set([...this.sensFields, ...fields]);
     }
 
     /**
@@ -189,25 +208,7 @@ export class Logger {
      */
     private format(level: LogLevelType, name: string, args: any[]) {
         try {
-            // tslint:disable-next-line: one-variable-per-declaration
-            let params: any[] = [];
-            args.forEach((item: any) => {
-                if (helper.isError(item)) {
-                    if (item.stack) {
-                        params.push(item.stack);
-                    } else {
-                        params.push(item);
-                    }
-                } else if (helper.isArray(item)) {
-                    params = [...params, ...item];
-                } else if (helper.isObject(item)) {
-                    params.push(JSON.stringify(item));
-                } else {
-                    params.push(item);
-                }
-            });
-
-            params = [`[${helper.dateTime('', '')}]`, `[${name !== '' ? name.toUpperCase() : level}]`, ...params];
+            const params = [`[${helper.dateTime('', '')}]`, `[${name !== '' ? name.toUpperCase() : level}]`, JSON.stringify(ShieldLog(args, this.sensFields))];
             if (level === "DEBUG") {
                 Error.captureStackTrace(this.emptyObj);
                 const matchResult = (this.emptyObj.stack).match(/\(.*?\)/g) || [];
@@ -395,3 +396,4 @@ export class Logger {
  * DefaultLogger
  */
 export const DefaultLogger = new Logger();
+

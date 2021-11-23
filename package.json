@@ -1,6 +1,6 @@
 {
     "name": "koatty_logger",
-    "version": "1.2.4",
+    "version": "1.2.6",
     "description": "Logger for koatty.",
     "scripts": {
         "build": "del-cli --force dist && tsc",

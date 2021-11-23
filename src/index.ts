@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-11-22 18:40:09
+ * @LastEditTime: 2021-11-23 16:49:37
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -202,23 +202,23 @@ export class Logger {
      * @private
      * @param {LogLevelType} level
      * @param {string} name
-     * @param {any[]} args
-     * @returns {any[]} 
+     * @param {any[]|string} args
+     * @returns {string} 
      * @memberof Logger
      */
-    private format(level: LogLevelType, name: string, args: any[]) {
+    private format(level: LogLevelType, name: string, args: any[] | string): string {
         try {
-            const params = [`[${helper.dateTime('', '')}]`, `[${name !== '' ? name.toUpperCase() : level}]`, JSON.stringify(ShieldLog(args, this.sensFields))];
+            const params = [`[${helper.dateTime('', '')}]`, `[${name}]`, ...ShieldLog(args, this.sensFields)];
             if (level === "DEBUG") {
                 Error.captureStackTrace(this.emptyObj);
                 const matchResult = (this.emptyObj.stack).match(/\(.*?\)/g) || [];
                 params.push(matchResult[3] || "");
             }
 
-            return params;
+            return util.format.apply(null, params);
         } catch (e) {
             // console.error(e.stack);
-            return [];
+            return "";
         }
     }
 
@@ -229,11 +229,12 @@ export class Logger {
      * @param {LogLevelType} level
      * @param {string} name
      * @param {string} color
-     * @param {any[]} args
+     * @param {any[]|string} args
      * @memberof Logger
      */
-    private print(level: LogLevelType, name: string, color: string, args: any[]) {
+    private print(level: LogLevelType, name: string, color: string, args: any[] | string) {
         try {
+            name = name !== '' ? name.toUpperCase() : level;
             const logLevel = this.getLevel();
             if (LogLevelObj[level] < LogLevelObj[logLevel]) {
                 return
@@ -245,7 +246,8 @@ export class Logger {
                 formatted = true;
                 color = color || 'grey';
                 const style = styles[color] || styles.grey;
-                console.log.apply(null, [style[0], ...args, style[1]]);
+
+                console.log(`${style[0]}${args}${style[1]}`);
             }
             // record log files
             if (this.getLogFile()) {
@@ -267,8 +269,9 @@ export class Logger {
      * @returns {*}  {Promise<any>}
      * @memberof Logger
      */
-    private async writeLogFile(level: LogLevelType, name: string, msgs: any[], formatted = false): Promise<any> {
+    private async writeLogFile(level: LogLevelType, name: string, msgs: any[] | string, formatted = false): Promise<any> {
         try {
+            name = name !== '' ? name.toUpperCase() : level;
             const logFilePath = this.getLogFilePath();
             if (!helper.isDir(logFilePath)) {
                 await helper.mkDir(logFilePath);
@@ -277,11 +280,11 @@ export class Logger {
             if (!formatted) {
                 params = this.format(level, name, msgs);
             }
-            name = name !== "" ? name : level;
+
             const file = `${logFilePath}${helper.sep}${name ? `${name}_` : ''}${helper.dateTime('', 'YYYY-MM-DD')}.log`;
             const fd = await fsOpen(file, 'a');
             // tslint:disable-next-line: no-null-keyword
-            await fsAppend(fd, `${util.format.apply(null, params)}\n`, 'utf8');
+            await fsAppend(fd, `${params}\n`, 'utf8');
             await fsClose(fd);
             // tslint:disable-next-line: no-null-keyword
             return null;
@@ -396,4 +399,3 @@ export class Logger {
  * DefaultLogger
  */
 export const DefaultLogger = new Logger();
-

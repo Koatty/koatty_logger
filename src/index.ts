@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-11-23 16:49:37
+ * @LastEditTime: 2021-12-01 20:28:00
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -78,7 +78,7 @@ export class Logger {
     // 文件日志级别
     private logFileLevel = "WARN";
     // 文件日志路径
-    private logFilePath: string;
+    private logFilePath = "./logs";
     // 脱敏字段
     private sensFields: Set<string> = new Set();
 

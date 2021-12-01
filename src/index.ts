@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-01 22:29:40
+ * @LastEditTime: 2021-12-01 23:18:26
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -369,7 +369,7 @@ export class Logger {
         } else {
             msgs = args;
         }
-        return this.print("INFO", name, color, msgs);
+        return this.print("DEBUG", name, color, msgs);
     }
 
     /**

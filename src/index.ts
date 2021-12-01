@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-01 20:28:00
+ * @LastEditTime: 2021-12-01 22:29:40
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -92,11 +92,7 @@ export class Logger {
             this.logLevel = process.env.LOGS_LEVEL;
             this.logFileLevel = process.env.LOGS_LEVEL;
         }
-        if (process.env.NODE_ENV === 'production') {
-            this.logConsole = false;
-            this.logFile = true;
-            this.logFileLevel = "INFO";
-        }
+
         if (process.env.LOGS_WRITE) {
             this.logFile = !!process.env.LOGS_WRITE;
         }

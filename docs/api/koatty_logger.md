@@ -10,15 +10,23 @@
 |  --- | --- |
 |  [Logger](./koatty_logger.logger.md) | Logger Logger |
 
-## Variables
+## Functions
 
-|  Variable | Description |
+|  Function | Description |
 |  --- | --- |
-|  [DefaultLogger](./koatty_logger.defaultlogger.md) | DefaultLogger |
+|  [GetLogger(opt)](./koatty_logger.getlogger.md) | GetLogger |
+|  [SetLogger(logger)](./koatty_logger.setlogger.md) | SetLogger |
+
+## Interfaces
+
+|  Interface | Description |
+|  --- | --- |
+|  [ILogger](./koatty_logger.ilogger.md) | Logger interface  ILogger |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [LogColor](./koatty_logger.logcolor.md) |  |
 |  [LogLevelType](./koatty_logger.logleveltype.md) |  |
 

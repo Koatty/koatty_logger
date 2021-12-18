@@ -11,8 +11,9 @@ Logger
 <b>Signature:</b>
 
 ```typescript
-export declare class Logger 
+export declare class Logger implements ILogger 
 ```
+<b>Implements:</b> [ILogger](./koatty_logger.ilogger.md)
 
 ## Constructors
 

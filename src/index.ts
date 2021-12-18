@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-01 23:18:26
+ * @LastEditTime: 2021-12-18 00:40:08
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -342,21 +342,22 @@ export class Logger {
     }
 
     /**
-     * log Custom
+     * log Log
      * 
-     * Logger.Custom('msg')
+     * Logger.Log('msg')
      * 
-     * Logger.Custom('name', 'msg')
+     * Logger.Log('name', 'msg')
      * 
-     * Logger.Custom('name', 'color', 'msg')
+     * Logger.Log('name', 'color', 'msg')
      * 
-     * Logger.Custom('name', 'color', 'msg1', 'msg2'...)
+     * Logger.Log('name', 'color', 'msg1', 'msg2'...)
      *
      * @param {...any[]} args
      * @returns {*} 
      * @memberof Logger
      */
-    public Custom(...args: any[]) {
+
+    public Log(...args: any[]) {
         // tslint:disable-next-line: one-variable-per-declaration
         let name = "", color = "white", msgs = [];
         if (args.length > 2) {
@@ -370,6 +371,13 @@ export class Logger {
             msgs = args;
         }
         return this.print("DEBUG", name, color, msgs);
+    }
+
+    /**
+     * alias Log
+     */
+    public Custom(...args: any[]) {
+        return this.Log(args);
     }
 
     /**

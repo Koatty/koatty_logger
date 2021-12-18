@@ -23,6 +23,12 @@
 |  --- | --- |
 |  [ILogger](./koatty_logger.ilogger.md) | Logger interface  ILogger |
 
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [DefaultLogger](./koatty_logger.defaultlogger.md) |  |
+
 ## Type Aliases
 
 |  Type Alias | Description |

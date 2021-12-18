@@ -3,7 +3,7 @@
  * @Usage: 
  * @Author: richen
  * @Date: 2021-12-18 20:03:31
- * @LastEditTime: 2021-12-18 20:34:28
+ * @LastEditTime: 2021-12-18 21:15:52
  */
 import { Logger, LogLevelType } from "./logger";
 // export
@@ -73,7 +73,7 @@ export interface ILogger {
 /**
  * DefaultLogger
  */
-let DefaultLogger: ILogger = new Logger();
+let defaultLogger: ILogger = new Logger();
 
 /**
  * GetLogger
@@ -96,7 +96,7 @@ export function GetLogger(opt: {
     logFilePath?: string;
 }) {
     if (opt === undefined) {
-        return DefaultLogger;
+        return defaultLogger;
     }
     const logger = new Logger(opt);
     return logger;
@@ -111,7 +111,10 @@ export function GetLogger(opt: {
  */
 export function SetLogger(logger: ILogger) {
     if (logger) {
-        DefaultLogger = logger;
+        defaultLogger = logger;
     }
-    return DefaultLogger;
+    return defaultLogger;
 }
+
+//DefaultLogger
+export const DefaultLogger = defaultLogger;

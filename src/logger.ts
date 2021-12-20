@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-18 20:31:47
+ * @LastEditTime: 2021-12-20 11:29:38
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -69,7 +69,7 @@ interface LoggerOpt {
  */
 export class Logger implements ILogger {
     // 控制台日志级别
-    private logLevel = "INFO";
+    private logLevel: LogLevelType = "INFO";
     // 默认打开控制台日志
     private logConsole = true;
     // 空对象
@@ -90,7 +90,7 @@ export class Logger implements ILogger {
      */
     constructor(opt?: LoggerOpt) {
         if (process.env.LOGS_LEVEL && LogLevelObj[process.env.LOGS_LEVEL]) {
-            this.logLevel = process.env.LOGS_LEVEL;
+            this.logLevel = <LogLevelType>process.env.LOGS_LEVEL;
             this.logFileLevel = process.env.LOGS_LEVEL;
         }
 
@@ -113,7 +113,7 @@ export class Logger implements ILogger {
     /**
      * getLevel
      */
-    public getLevel() {
+    public getLevel(): LogLevelType {
         return this.logLevel;
     }
 
@@ -122,75 +122,6 @@ export class Logger implements ILogger {
      */
     public setLevel(level: LogLevelType) {
         this.logLevel = level;
-    }
-
-    /**
-     * getLogConsole
-     */
-    public getLogConsole() {
-        return this.logConsole;
-    }
-
-    /**
-     * setLogConsole
-     */
-    public setLogConsole(t: boolean) {
-        this.logConsole = t;
-    }
-
-    /**
-     * getLogFile
-     */
-    public getLogFile() {
-        return this.logFile;
-    }
-
-    /**
-     * setLogFile
-     */
-    public setLogFile(t: boolean) {
-        this.logFile = t;
-    }
-
-    /**
-     * getLogFileLevel
-     */
-    public getLogFileLevel() {
-        return this.logFileLevel;
-    }
-
-    /**
-     * setLogFileLevel
-     */
-    public setLogFileLevel(level: LogLevelType) {
-        this.logFileLevel = level;
-    }
-
-    /**
-     * getLogFilePath
-     */
-    public getLogFilePath() {
-        return this.logFilePath;
-    }
-
-    /**
-     * setLogPath
-     */
-    public setLogFilePath(path: string) {
-        this.logFilePath = path;
-    }
-    /**
-     * getSensFields
-     */
-    public getSensFields() {
-        return this.sensFields;
-    }
-
-    /**
-     * setSensFields
-     */
-    public setSensFields(fields: string[]) {
-        this.sensFields = new Set([...this.sensFields, ...fields]);
     }
 
     /**
@@ -238,7 +169,7 @@ export class Logger implements ILogger {
             }
             let formatted = false;
             // print console
-            if (this.getLogConsole()) {
+            if (this.logConsole) {
                 args = this.format(level, name, args);
                 formatted = true;
                 color = color || 'grey';
@@ -247,7 +178,7 @@ export class Logger implements ILogger {
                 console.log(`${style[0]}${args}${style[1]}`);
             }
             // record log files
-            if (this.getLogFile()) {
+            if (this.logFile) {
                 this.writeLogFile(level, name, args, formatted);
             }
         } catch (e) {
@@ -269,7 +200,7 @@ export class Logger implements ILogger {
     private async writeLogFile(level: LogLevelType, name: string, msgs: any[] | string, formatted = false): Promise<any> {
         try {
             name = name !== '' ? name.toUpperCase() : level;
-            const logFilePath = this.getLogFilePath();
+            const logFilePath = this.logFilePath;
             if (!helper.isDir(logFilePath)) {
                 await helper.mkDir(logFilePath);
             }

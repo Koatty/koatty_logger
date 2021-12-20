@@ -3,7 +3,7 @@
  * @Usage: 
  * @Author: richen
  * @Date: 2021-12-18 20:03:31
- * @LastEditTime: 2021-12-18 21:15:52
+ * @LastEditTime: 2021-12-20 11:21:42
  */
 import { Logger, LogLevelType } from "./logger";
 // export
@@ -18,6 +18,15 @@ export type LogColor = "white" | "grey" | "black" | "blue" | "cyan" | "green" | 
  * @interface ILogger
  */
 export interface ILogger {
+    /**
+     * getLevel
+     */
+    getLevel(): LogLevelType;
+
+    /**
+     * setLevel
+     */
+    setLevel(level: LogLevelType): void;
     /**
      * log Debug
      *
@@ -73,7 +82,7 @@ export interface ILogger {
 /**
  * DefaultLogger
  */
-let defaultLogger: ILogger = new Logger();
+let defaultLogger = new Logger();
 
 /**
  * GetLogger
@@ -111,7 +120,7 @@ export function GetLogger(opt: {
  */
 export function SetLogger(logger: ILogger) {
     if (logger) {
-        defaultLogger = logger;
+        defaultLogger = <Logger>logger;
     }
     return defaultLogger;
 }

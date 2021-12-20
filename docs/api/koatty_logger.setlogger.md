@@ -10,7 +10,7 @@ SetLogger
 <b>Signature:</b>
 
 ```typescript
-export declare function SetLogger(logger: ILogger): ILogger;
+export declare function SetLogger(logger: ILogger): Logger;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ export declare function SetLogger(logger: ILogger): ILogger;
 
 <b>Returns:</b>
 
-[ILogger](./koatty_logger.ilogger.md)
+[Logger](./koatty_logger.logger.md)
 
 {<!-- -->\*<!-- -->}
 

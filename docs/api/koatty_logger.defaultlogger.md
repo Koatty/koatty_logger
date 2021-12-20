@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-DefaultLogger: ILogger
+DefaultLogger: Logger
 ```

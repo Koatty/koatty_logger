@@ -29,19 +29,9 @@ export declare class Logger implements ILogger
 |  [Debug(args)](./koatty_logger.logger.debug.md) |  | log Debug |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
-|  [getLogConsole()](./koatty_logger.logger.getlogconsole.md) |  | getLogConsole |
-|  [getLogFile()](./koatty_logger.logger.getlogfile.md) |  | getLogFile |
-|  [getLogFileLevel()](./koatty_logger.logger.getlogfilelevel.md) |  | getLogFileLevel |
-|  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
-|  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
 |  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
 |  [Log(args)](./koatty_logger.logger.log.md) |  | log Log<!-- -->Logger.Log('msg')<!-- -->Logger.Log('name', 'msg')<!-- -->Logger.Log('name', 'color', 'msg')<!-- -->Logger.Log('name', 'color', 'msg1', 'msg2'...) |
 |  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | setLevel |
-|  [setLogConsole(t)](./koatty_logger.logger.setlogconsole.md) |  | setLogConsole |
-|  [setLogFile(t)](./koatty_logger.logger.setlogfile.md) |  | setLogFile |
-|  [setLogFileLevel(level)](./koatty_logger.logger.setlogfilelevel.md) |  | setLogFileLevel |
-|  [setLogFilePath(path)](./koatty_logger.logger.setlogfilepath.md) |  | setLogPath |
-|  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |
 |  [Success(args)](./koatty_logger.logger.success.md) |  | log Success |
 |  [Warn(args)](./koatty_logger.logger.warn.md) |  | log Warn |
 |  [Write(args)](./koatty_logger.logger.write.md) |  | write log file |

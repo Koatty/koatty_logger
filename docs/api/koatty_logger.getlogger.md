@@ -16,7 +16,7 @@ export declare function GetLogger(opt: {
     logFile?: boolean;
     logFileLevel?: LogLevelType;
     logFilePath?: string;
-}): ILogger;
+}): Logger;
 ```
 
 ## Parameters
@@ -27,7 +27,7 @@ export declare function GetLogger(opt: {
 
 <b>Returns:</b>
 
-[ILogger](./koatty_logger.ilogger.md)
+[Logger](./koatty_logger.logger.md)
 
 {<!-- -->\*<!-- -->}
 

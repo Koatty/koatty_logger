@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-21 11:28:44
+ * @LastEditTime: 2021-12-21 11:40:42
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -323,16 +323,6 @@ export class Logger implements ILogger {
     }
 
     /**
-     * log Success
-     *
-     * @returns {*} 
-     * @memberof Logger
-     */
-    public Success(...args: any[]) {
-        return this.print("INFO", "", "green", args);
-    }
-
-    /**
      * log Error
      * 
      * @returns {*} 
@@ -362,7 +352,7 @@ export class Logger implements ILogger {
         let name = "", color = "white", msgs = [];
         if (args.length > 2) {
             name = args[0];
-            color = args[1];
+            color = args[1] || color;
             msgs = args.slice(2);
         } else if (args.length === 2) {
             name = args[0];
@@ -370,7 +360,7 @@ export class Logger implements ILogger {
         } else {
             msgs = args;
         }
-        return this.print("DEBUG", name, color, msgs);
+        return this.print("INFO", name, color, msgs);
     }
 
     /**

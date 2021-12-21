@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-20 11:29:38
+ * @LastEditTime: 2021-12-21 11:28:44
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -77,7 +77,7 @@ export class Logger implements ILogger {
     // 文件日志开关
     private logFile = false;
     // 文件日志级别
-    private logFileLevel = "WARN";
+    private logFileLevel: LogLevelType = "WARN";
     // 文件日志路径
     private logFilePath = "./logs";
     // 脱敏字段
@@ -91,7 +91,7 @@ export class Logger implements ILogger {
     constructor(opt?: LoggerOpt) {
         if (process.env.LOGS_LEVEL && LogLevelObj[process.env.LOGS_LEVEL]) {
             this.logLevel = <LogLevelType>process.env.LOGS_LEVEL;
-            this.logFileLevel = process.env.LOGS_LEVEL;
+            this.logFileLevel = <LogLevelType>process.env.LOGS_LEVEL;
         }
 
         if (process.env.LOGS_WRITE) {
@@ -122,6 +122,75 @@ export class Logger implements ILogger {
      */
     public setLevel(level: LogLevelType) {
         this.logLevel = level;
+    }
+
+    /**
+     * getLogConsole
+     */
+    public getLogConsole() {
+        return this.logConsole;
+    }
+
+    /**
+     * setLogConsole
+     */
+    public setLogConsole(t: boolean) {
+        this.logConsole = t;
+    }
+
+    /**
+     * getLogFile
+     */
+    public getLogFile() {
+        return this.logFile;
+    }
+
+    /**
+     * setLogFile
+     */
+    public setLogFile(t: boolean) {
+        this.logFile = t;
+    }
+
+    /**
+     * getLogFileLevel
+     */
+    public getLogFileLevel() {
+        return this.logFileLevel;
+    }
+
+    /**
+     * setLogFileLevel
+     */
+    public setLogFileLevel(level: LogLevelType) {
+        this.logFileLevel = level;
+    }
+
+    /**
+     * getLogFilePath
+     */
+    public getLogFilePath() {
+        return this.logFilePath;
+    }
+
+    /**
+     * setLogPath
+     */
+    public setLogFilePath(path: string) {
+        this.logFilePath = path;
+    }
+    /**
+     * getSensFields
+     */
+    public getSensFields() {
+        return this.sensFields;
+    }
+
+    /**
+     * setSensFields
+     */
+    public setSensFields(fields: string[]) {
+        this.sensFields = new Set([...this.sensFields, ...fields]);
     }
 
     /**

@@ -10,13 +10,6 @@
 |  --- | --- |
 |  [Logger](./koatty_logger.logger.md) | Logger Logger |
 
-## Functions
-
-|  Function | Description |
-|  --- | --- |
-|  [GetLogger(opt)](./koatty_logger.getlogger.md) | GetLogger |
-|  [SetLogger(logger)](./koatty_logger.setlogger.md) | SetLogger |
-
 ## Interfaces
 
 |  Interface | Description |

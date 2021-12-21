@@ -3,7 +3,7 @@
  * @Usage: 
  * @Author: richen
  * @Date: 2021-12-18 20:03:31
- * @LastEditTime: 2021-12-20 11:21:42
+ * @LastEditTime: 2021-12-21 11:19:20
  */
 import { Logger, LogLevelType } from "./logger";
 // export
@@ -79,51 +79,6 @@ export interface ILogger {
     Log(name: string, ...msg: any[]): void;
     Log(name: string, color: LogColor, ...msg: any[]): void;
 }
-/**
- * DefaultLogger
- */
-let defaultLogger = new Logger();
-
-/**
- * GetLogger
- *
- * @export
- * @param {{
- *     logLevel?: LogLevelType;
- *     logConsole?: boolean;
- *     logFile?: boolean;
- *     logFileLevel?: LogLevelType;
- *     logFilePath?: string;
- * }} opt
- * @returns {*}  
- */
-export function GetLogger(opt: {
-    logLevel?: LogLevelType;
-    logConsole?: boolean;
-    logFile?: boolean;
-    logFileLevel?: LogLevelType;
-    logFilePath?: string;
-}) {
-    if (opt === undefined) {
-        return defaultLogger;
-    }
-    const logger = new Logger(opt);
-    return logger;
-}
-
-/**
- * SetLogger
- * 
- * @export
- * @param {ILogger} logger
- * @returns {*}  
- */
-export function SetLogger(logger: ILogger) {
-    if (logger) {
-        defaultLogger = <Logger>logger;
-    }
-    return defaultLogger;
-}
 
 //DefaultLogger
-export const DefaultLogger = defaultLogger;
+export const DefaultLogger = new Logger();

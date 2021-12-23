@@ -42,7 +42,6 @@ export declare class Logger implements ILogger
 |  [setLogFileLevel(level)](./koatty_logger.logger.setlogfilelevel.md) |  | setLogFileLevel |
 |  [setLogFilePath(path)](./koatty_logger.logger.setlogfilepath.md) |  | setLogPath |
 |  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |
-|  [Success(args)](./koatty_logger.logger.success.md) |  | log Success |
 |  [Warn(args)](./koatty_logger.logger.warn.md) |  | log Warn |
 |  [Write(args)](./koatty_logger.logger.write.md) |  | write log file |
 

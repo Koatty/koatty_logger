@@ -5,20 +5,14 @@
   "scripts": {
     "build": "npm run build:js && npm run build:dts && npm run build:doc && npm run build:cp",
     "build:cp": "node scripts/postBuild && copyfiles package.json LICENSE README.md dist/",
-    "build:js": "del-cli --force dist && npx rollup -c",
+    "build:js": "del-cli --force dist && npx rollup -c .rollup.config.js",
     "build:doc": "del-cli --force docs/api && npx api-documenter markdown --input temp --output docs/api",
     "build:dts": "del-cli --force temp && npx tsc && npx api-extractor run --local --verbose",
     "eslint": "eslint --ext .ts,.js ./",
     "prepublishOnly": "npm test && npm run build",
     "prerelease": "npm test && npm run build",
     "release": "standard-version",
-    "release:pre": "npm run release -- --prerelease",
-    "release:major": "npm run release -- --release-as major",
-    "release:minor": "npm run release -- --release-as minor",
-    "pub": "git push --follow-tags origin && npm publish",
-    "test": "npm run eslint && jest --passWithNoTests",
-    "test:cov": "jest --collectCoverage --detectOpenHandles",
-    "version": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "test": "npm run eslint && jest --passWithNoTests"
   },
   "main": "./dist/index.js",
   "exports": {

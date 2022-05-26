@@ -16,5 +16,5 @@ constructor(opt?: LoggerOpt);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  opt | LoggerOpt |  Logger |
+|  opt | LoggerOpt | <i>(Optional)</i>  Logger |
 

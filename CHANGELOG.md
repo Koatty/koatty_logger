@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.15](https://github.com/thinkkoa/koatty_logger/compare/v1.3.14...v1.3.15) (2022-09-09)
+
+
+### Bug Fixes
+
+* add level ([bf2b6e0](https://github.com/thinkkoa/koatty_logger/commit/bf2b6e00f33b1ebc65d373d9da045bafdb2339cb))
+* upgrade deps ([3608313](https://github.com/thinkkoa/koatty_logger/commit/3608313a6f3d5cbdb3b00da8a8b84ef3443a45f4))
+
 ### [1.3.14](https://github.com/thinkkoa/koatty_logger/compare/v1.3.12...v1.3.14) (2022-05-26)
 
 ### [1.3.12](https://github.com/thinkkoa/koatty_logger/compare/v1.3.10...v1.3.12) (2021-12-21)

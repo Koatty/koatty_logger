@@ -347,7 +347,26 @@ export class Logger implements ILogger {
    * @returns {*} 
    * @memberof Logger
    */
-  public Log(...args: any[]) {
+  public Log(level: LogLevelType, ...args: any[]) {
+    // tslint:disable-next-line: one-variable-per-declaration
+    let name = "", color = "white", msgs = [];
+    if (args.length > 2) {
+      name = args[0];
+      color = args[1] || color;
+      msgs = args.slice(2);
+    } else if (args.length === 2) {
+      name = args[0];
+      msgs = args.slice(1);
+    } else {
+      msgs = args;
+    }
+    return this.print(level, name, color, msgs);
+  }
+
+  /**
+   * alias Log
+   */
+  public Custom(...args: any[]) {
     // tslint:disable-next-line: one-variable-per-declaration
     let name = "", color = "white", msgs = [];
     if (args.length > 2) {
@@ -361,13 +380,6 @@ export class Logger implements ILogger {
       msgs = args;
     }
     return this.print("INFO", name, color, msgs);
-  }
-
-  /**
-   * alias Log
-   */
-  public Custom(...args: any[]) {
-    return this.Log(args);
   }
 
   /**

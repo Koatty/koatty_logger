@@ -17,13 +17,14 @@ Logger.Log('name', 'color', 'msg1', 'msg2'...)
 <b>Signature:</b>
 
 ```typescript
-Log(...args: any[]): void;
+Log(level: LogLevelType, ...args: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
+|  level | [LogLevelType](./koatty_logger.logleveltype.md) |  |
 |  args | any\[\] |  |
 
 <b>Returns:</b>

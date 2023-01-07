@@ -3,7 +3,7 @@
  * @Usage: 
  * @Author: richen
  * @Date: 2021-12-18 20:03:31
- * @LastEditTime: 2022-05-26 12:47:09
+ * @LastEditTime: 2023-01-07 13:17:48
  */
 import { Logger, LogLevelType } from "./logger";
 // export
@@ -81,4 +81,4 @@ export interface ILogger {
 }
 
 //DefaultLogger
-export const DefaultLogger = new Logger();
+export const DefaultLogger: ILogger = new Logger();

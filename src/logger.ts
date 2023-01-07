@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-01-07 12:15:36
+ * @LastEditTime: 2023-01-07 13:16:39
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -339,17 +339,23 @@ export class Logger implements ILogger {
    * 
    * Logger.Log('name', 'msg')
    * 
-   * Logger.Log('name', 'color', 'msg')
+   * Logger.Log('INFO', 'msg')
    * 
-   * Logger.Log('name', 'color', 'msg1', 'msg2'...)
+   * Logger.Log('INFO', 'color', 'msg')
+   * 
+   * Logger.Log('INFO', 'color', 'msg1', 'msg2'...)
    *
    * @param {...any[]} args
    * @returns {*} 
    * @memberof Logger
    */
-  public Log(level: LogLevelType, ...args: any[]) {
+  public Log(name: LogLevelType | string, ...args: any[]) {
     // tslint:disable-next-line: one-variable-per-declaration
-    let name = "", color = "white", msgs = [];
+    let level = "INFO", color = "white", msgs = [];
+    if (LogLevelObj[name]) {
+      level = name;
+      name = "";
+    }
     if (args.length > 2) {
       name = args[0];
       color = args[1] || color;
@@ -360,26 +366,7 @@ export class Logger implements ILogger {
     } else {
       msgs = args;
     }
-    return this.print(level, name, color, msgs);
-  }
-
-  /**
-   * alias Log
-   */
-  public Custom(...args: any[]) {
-    // tslint:disable-next-line: one-variable-per-declaration
-    let name = "", color = "white", msgs = [];
-    if (args.length > 2) {
-      name = args[0];
-      color = args[1] || color;
-      msgs = args.slice(2);
-    } else if (args.length === 2) {
-      name = args[0];
-      msgs = args.slice(1);
-    } else {
-      msgs = args;
-    }
-    return this.print("INFO", name, color, msgs);
+    return this.print(<LogLevelType>level, name, color, msgs);
   }
 
   /**

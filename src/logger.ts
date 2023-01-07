@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-05-26 12:47:17
+ * @LastEditTime: 2023-01-07 12:15:36
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -278,7 +278,7 @@ export class Logger implements ILogger {
         params = this.format(level, name, msgs);
       }
 
-      const file = `${logFilePath}${helper.sep}${name ? `${name}_` : ''}${helper.dateTime('', 'YYYY-MM-DD')}.log`;
+      const file = `${logFilePath}${helper.sep}${name ? `${name}_` : ''}${helper.dateTime('', 'YYYY-MM-DD-hh')}.log`;
       const fd = await fsOpen(file, 'a');
       // tslint:disable-next-line: no-null-keyword
       await fsAppend(fd, `${params}\n`, 'utf8');

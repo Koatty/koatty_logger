@@ -81,9 +81,7 @@
   "dependencies": {
     "koatty_lib": "^1.x.x"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+  "peerDependencies": {
+    "koatty_lib": "^1.x.x"
   }
 }

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.16](https://github.com/thinkkoa/koatty_logger/compare/v1.3.15...v1.3.16) (2023-01-07)
+
+
+### Bug Fixes
+
+* 按小时分割 ([7f00b7d](https://github.com/thinkkoa/koatty_logger/commit/7f00b7d0f56bd0321dbe2a400971827492e67223))
+
 ### [1.3.15](https://github.com/thinkkoa/koatty_logger/compare/v1.3.14...v1.3.15) (2022-09-09)
 
 

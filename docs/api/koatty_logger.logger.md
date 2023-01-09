@@ -29,7 +29,7 @@ export declare class Logger implements ILogger
 |  [enable(b)](./koatty_logger.logger.enable.md) |  | enable |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
-|  [getLogFilePath(f)](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
+|  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
 |  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
 |  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
 |  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>log Log</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |

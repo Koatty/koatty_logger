@@ -9,8 +9,15 @@ getLogFilePath
 <b>Signature:</b>
 
 ```typescript
-getLogFilePath(): string;
+getLogFilePath(f: string): string;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  f | string |  |
+
 <b>Returns:</b>
 
 string

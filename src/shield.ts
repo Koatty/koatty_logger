@@ -3,7 +3,7 @@
  * @Usage: 
  * @Author: richen
  * @Date: 2021-11-04 20:31:43
- * @LastEditTime: 2022-05-26 12:47:26
+ * @LastEditTime: 2023-01-08 14:50:16
  */
 import * as helper from "koatty_lib";
 import { inspect } from "util";
@@ -70,7 +70,7 @@ export function ShieldLog(splat: any, fields: Set<string>, keyName?: string): an
   if (fields.size === 0) {
     return splat;
   }
-  if (splat === null) return splat;
+  if (!splat) return splat;
 
   if (Array.isArray(splat)) {
     for (let index = 0; index < splat.length; index++) {

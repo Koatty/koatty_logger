@@ -8,13 +8,15 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [Logger](./koatty_logger.logger.md) | Logger Logger |
+|  [Logger](./koatty_logger.logger.md) | <p>Logger</p><p> Logger</p> |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
-|  [ILogger](./koatty_logger.ilogger.md) | Logger interface  ILogger |
+|  [ILogger](./koatty_logger.ilogger.md) | <p>Logger interface</p><p>  ILogger</p> |
+|  [LoggerOpt](./koatty_logger.loggeropt.md) |  |
+|  [LogTrans](./koatty_logger.logtrans.md) |  |
 
 ## Variables
 

@@ -10,21 +10,19 @@ Logger.Log('msg')
 
 Logger.Log('name', 'msg')
 
-Logger.Log('name', 'color', 'msg')
-
-Logger.Log('name', 'color', 'msg1', 'msg2'...)
+Logger.Log('name', 'msg1', 'msg2'...)
 
 <b>Signature:</b>
 
 ```typescript
-Log(level: LogLevelType, ...args: any[]): void;
+Log(name: LogLevelType | string, ...args: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  level | [LogLevelType](./koatty_logger.logleveltype.md) |  |
+|  name | [LogLevelType](./koatty_logger.logleveltype.md) \| string |  |
 |  args | any\[\] |  |
 
 <b>Returns:</b>

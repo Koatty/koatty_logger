@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type LogColor = "white" | "grey" | "black" | "blue" | "cyan" | "green" | "magenta" | "red" | "yellow";
+export type LogColor = "white" | "blue" | "yellow" | "red";
 ```

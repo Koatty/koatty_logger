@@ -4,19 +4,19 @@
 
 ## Logger.setLogFilePath() method
 
-setLogPath
+setLogFile
 
 <b>Signature:</b>
 
 ```typescript
-setLogFilePath(path: string): void;
+setLogFilePath(f: string): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  path | string |  |
+|  f | string |  |
 
 <b>Returns:</b>
 

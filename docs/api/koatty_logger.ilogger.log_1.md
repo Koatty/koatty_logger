@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-Log(name: string, ...msg: any[]): void;
+Log(name: LogLevelType | string, ...msg: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  name | string |  |
+|  name | [LogLevelType](./koatty_logger.logleveltype.md) \| string |  |
 |  msg | any\[\] |  |
 
 <b>Returns:</b>

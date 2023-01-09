@@ -2,9 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [2.0.0](https://github.com/thinkkoa/koatty_logger/compare/v1.3.16...v2.0.0) (2023-01-09)
-
-
 ### Bug Fixes
 
 * peerDependencies ([253f017](https://github.com/thinkkoa/koatty_logger/commit/253f0172cd2116a56174175f3a50209fdd905c65))

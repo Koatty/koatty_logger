@@ -25,23 +25,16 @@ export declare class Logger implements ILogger
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [Custom(args)](./koatty_logger.logger.custom.md) |  | alias Log |
 |  [Debug(args)](./koatty_logger.logger.debug.md) |  | log Debug |
+|  [enable(b)](./koatty_logger.logger.enable.md) |  | enable |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
-|  [getLogConsole()](./koatty_logger.logger.getlogconsole.md) |  | getLogConsole |
-|  [getLogFile()](./koatty_logger.logger.getlogfile.md) |  | getLogFile |
-|  [getLogFileLevel()](./koatty_logger.logger.getlogfilelevel.md) |  | getLogFileLevel |
-|  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
+|  [getLogFilePath(f)](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
 |  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
 |  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
-|  [Log(level, args)](./koatty_logger.logger.log.md) |  | log Log<!-- -->Logger.Log('msg')<!-- -->Logger.Log('name', 'msg')<!-- -->Logger.Log('name', 'color', 'msg')<!-- -->Logger.Log('name', 'color', 'msg1', 'msg2'...) |
+|  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>log Log</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
 |  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | setLevel |
-|  [setLogConsole(t)](./koatty_logger.logger.setlogconsole.md) |  | setLogConsole |
-|  [setLogFile(t)](./koatty_logger.logger.setlogfile.md) |  | setLogFile |
-|  [setLogFileLevel(level)](./koatty_logger.logger.setlogfilelevel.md) |  | setLogFileLevel |
-|  [setLogFilePath(path)](./koatty_logger.logger.setlogfilepath.md) |  | setLogPath |
+|  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | setLogFile |
 |  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |
 |  [Warn(args)](./koatty_logger.logger.warn.md) |  | log Warn |
-|  [Write(args)](./koatty_logger.logger.write.md) |  | write log file |
 

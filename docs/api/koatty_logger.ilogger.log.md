@@ -10,9 +10,7 @@ Logger.Log('msg')
 
 Logger.Log('name', 'msg')
 
-Logger.Log('name', 'color', 'msg')
-
-Logger.Log('name', 'color', 'msg1', 'msg2'...)
+Logger.Log('name', 'msg1', 'msg2'...)
 
 <b>Signature:</b>
 

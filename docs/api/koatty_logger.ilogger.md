@@ -20,11 +20,9 @@ export interface ILogger
 |  --- | --- |
 |  [Debug(args)](./koatty_logger.ilogger.debug.md) | log Debug |
 |  [Error(args)](./koatty_logger.ilogger.error.md) | log Error |
-|  [getLevel()](./koatty_logger.ilogger.getlevel.md) | getLevel |
 |  [Info(args)](./koatty_logger.ilogger.info.md) | log Info |
-|  [Log(msg)](./koatty_logger.ilogger.log.md) | log Custom<!-- -->Logger.Log('msg')<!-- -->Logger.Log('name', 'msg')<!-- -->Logger.Log('name', 'color', 'msg')<!-- -->Logger.Log('name', 'color', 'msg1', 'msg2'...) |
+|  [Log(msg)](./koatty_logger.ilogger.log.md) | <p>log Custom</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
 |  [Log(name, msg)](./koatty_logger.ilogger.log_1.md) |  |
 |  [Log(name, color, msg)](./koatty_logger.ilogger.log_2.md) |  |
-|  [setLevel(level)](./koatty_logger.ilogger.setlevel.md) | setLevel |
 |  [Warn(args)](./koatty_logger.ilogger.warn.md) | log Warn |
 

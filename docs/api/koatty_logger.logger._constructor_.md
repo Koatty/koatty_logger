@@ -16,5 +16,5 @@ constructor(opt?: LoggerOpt);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  opt | LoggerOpt | <i>(Optional)</i>  Logger |
+|  opt | [LoggerOpt](./koatty_logger.loggeropt.md) | <i>(Optional)</i>  Logger |
 

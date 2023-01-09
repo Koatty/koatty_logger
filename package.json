@@ -1,6 +1,6 @@
 {
   "name": "koatty_logger",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Logger for koatty.",
   "scripts": {
     "build": "npm run build:js && npm run build:dts && npm run build:doc && npm run build:cp",
@@ -11,6 +11,7 @@
     "eslint": "eslint --ext .ts,.js ./",
     "prepublishOnly": "npm test && npm run build",
     "prerelease": "npm test && npm run build",
+    "push": "git push --follow-tags origin && npm publish",
     "release": "standard-version",
     "release:major": "npm run release -- --release-as major",
     "release:minor": "npm run release -- --release-as minor",

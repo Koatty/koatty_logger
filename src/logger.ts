@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-01-09 22:37:25
+ * @LastEditTime: 2023-01-13 15:22:40
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -64,7 +64,7 @@ export class Logger implements ILogger {
   private logger: wLogger;
   private transports: LogTrans = {};
   // 文件日志
-  private logFilePath = "./logs/";
+  private logFilePath = "";
   // 脱敏字段
   private sensFields: Set<string> = new Set();
 

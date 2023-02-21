@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-01-13 15:22:40
+ * @LastEditTime: 2023-02-21 18:52:28
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -159,12 +159,26 @@ export class Logger implements ILogger {
   }
 
   /**
+   * debug
+   */
+  public debug(...args: any[]) {
+    return this.printLog("debug", "", args);
+  }
+
+  /**
    * log Info
    *
    * @returns {*} 
    * @memberof Logger
    */
   public Info(...args: any[]) {
+    return this.printLog("info", "", args);
+  }
+
+  /**
+   * info
+   */
+  public info(...args: any[]) {
     return this.printLog("info", "", args);
   }
 
@@ -179,6 +193,13 @@ export class Logger implements ILogger {
   }
 
   /**
+   * warn
+   */
+  public warn(...args: any[]) {
+    return this.printLog("warning", "", args);
+  }
+
+  /**
    * log Error
    * 
    * @returns {*} 
@@ -186,6 +207,12 @@ export class Logger implements ILogger {
    */
   public Error(...args: any[]) {
     return this.printLog("error", "", args);
+  }
+  /**
+   * error
+   */
+  public error(...args: any[]) {
+    return this.printLog("warning", "", args);
   }
 
   /**
@@ -203,6 +230,18 @@ export class Logger implements ILogger {
    */
   public Log(name: LogLevelType | string, ...args: any[]) {
     // tslint:disable-next-line: one-variable-per-declaration
+    let level = "info";
+    if (LogLevelObj[name]) {
+      level = name;
+      name = "";
+    }
+    return this.printLog(<LogLevelType>level, name, args);
+  }
+
+  /**
+   * log
+   */
+  public log(name: LogLevelType | string, ...args: any[]) {
     let level = "info";
     if (LogLevelObj[name]) {
       level = name;

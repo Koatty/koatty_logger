@@ -25,16 +25,21 @@ export declare class Logger implements ILogger
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [debug(args)](./koatty_logger.logger.debug.md) |  | debug |
 |  [Debug(args)](./koatty_logger.logger.debug.md) |  | log Debug |
 |  [enable(b)](./koatty_logger.logger.enable.md) |  | enable |
+|  [error(args)](./koatty_logger.logger.error.md) |  | error |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
 |  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
 |  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
+|  [info(args)](./koatty_logger.logger.info.md) |  | info |
 |  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
+|  [log(name, args)](./koatty_logger.logger.log.md) |  | log |
 |  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>log Log</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
 |  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | setLevel |
 |  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | setLogFile |
 |  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |
+|  [warn(args)](./koatty_logger.logger.warn.md) |  | warn |
 |  [Warn(args)](./koatty_logger.logger.warn.md) |  | log Warn |
 

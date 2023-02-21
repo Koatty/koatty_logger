@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/thinkkoa/koatty_logger/compare/v2.0.4...v2.1.0) (2023-02-21)
+
+
+### Features
+
+* add lowercase method ([286043d](https://github.com/thinkkoa/koatty_logger/commit/286043d340d694383f19b7bb5770fd44e3046c67))
+
 ### [2.0.4](https://github.com/thinkkoa/koatty_logger/compare/v2.0.2...v2.0.4) (2023-01-13)
 
 

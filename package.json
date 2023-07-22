@@ -83,7 +83,7 @@
   },
   "dependencies": {
     "koatty_lib": "^1.x.x",
-    "winston": "^3.8.2",
+    "winston": "^3.10.0",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "peerDependencies": {

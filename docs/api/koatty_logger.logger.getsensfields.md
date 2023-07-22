@@ -6,12 +6,12 @@
 
 getSensFields
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getSensFields(): Set<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Set&lt;string&gt;
 

@@ -4,7 +4,7 @@
 
 ## ILogger.Log() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 Log(name: LogLevelType | string, color: LogColor, ...msg: any[]): void;
@@ -18,7 +18,7 @@ Log(name: LogLevelType | string, color: LogColor, ...msg: any[]): void;
 |  color | [LogColor](./koatty_logger.logcolor.md) |  |
 |  msg | any\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

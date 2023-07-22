@@ -4,7 +4,7 @@
 
 ## LoggerOpt interface
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface LoggerOpt 
@@ -14,7 +14,7 @@ export interface LoggerOpt
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [logFilePath?](./koatty_logger.loggeropt.logfilepath.md) |  | string | <i>(Optional)</i> |
-|  [logLevel?](./koatty_logger.loggeropt.loglevel.md) |  | [LogLevelType](./koatty_logger.logleveltype.md) | <i>(Optional)</i> |
-|  [sensFields?](./koatty_logger.loggeropt.sensfields.md) |  | Set&lt;string&gt; | <i>(Optional)</i> |
+|  [logFilePath?](./koatty_logger.loggeropt.logfilepath.md) |  | string | _(Optional)_ |
+|  [logLevel?](./koatty_logger.loggeropt.loglevel.md) |  | [LogLevelType](./koatty_logger.logleveltype.md) | _(Optional)_ |
+|  [sensFields?](./koatty_logger.loggeropt.sensfields.md) |  | Set&lt;string&gt; | _(Optional)_ |
 

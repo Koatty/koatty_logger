@@ -6,12 +6,12 @@
 
 getLevel
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getLevel(): LogLevelType;
 ```
-<b>Returns:</b>
+**Returns:**
 
 [LogLevelType](./koatty_logger.logleveltype.md)
 

@@ -4,7 +4,7 @@
 
 ## ILogger.Log() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 Log(name: LogLevelType | string, ...msg: any[]): void;
@@ -17,7 +17,7 @@ Log(name: LogLevelType | string, ...msg: any[]): void;
 |  name | [LogLevelType](./koatty_logger.logleveltype.md) \| string |  |
 |  msg | any\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

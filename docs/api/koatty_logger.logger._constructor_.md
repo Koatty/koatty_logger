@@ -6,7 +6,7 @@
 
 Creates an instance of Logger.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(opt?: LoggerOpt);
@@ -16,5 +16,5 @@ constructor(opt?: LoggerOpt);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  opt | [LoggerOpt](./koatty_logger.loggeropt.md) | <i>(Optional)</i>  Logger |
+|  opt | [LoggerOpt](./koatty_logger.loggeropt.md) | _(Optional)_  Logger |
 

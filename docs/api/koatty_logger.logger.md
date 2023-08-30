@@ -8,12 +8,12 @@ Logger
 
  Logger
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 export declare class Logger implements ILogger 
 ```
-**Implements:** [ILogger](./koatty_logger.ilogger.md)
+<b>Implements:</b> [ILogger](./koatty_logger.ilogger.md)
 
 ## Constructors
 

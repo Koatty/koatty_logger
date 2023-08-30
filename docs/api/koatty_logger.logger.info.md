@@ -6,7 +6,7 @@
 
 log Info
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 Info(...args: any[]): void;
@@ -18,7 +18,7 @@ Info(...args: any[]): void;
 |  --- | --- | --- |
 |  args | any\[\] |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

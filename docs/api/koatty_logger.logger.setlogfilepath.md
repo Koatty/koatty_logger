@@ -6,7 +6,7 @@
 
 setLogFile
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 setLogFilePath(f: string): void;
@@ -18,7 +18,7 @@ setLogFilePath(f: string): void;
 |  --- | --- | --- |
 |  f | string |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

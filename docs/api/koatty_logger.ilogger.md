@@ -8,7 +8,7 @@ Logger interface
 
   ILogger
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 export interface ILogger 

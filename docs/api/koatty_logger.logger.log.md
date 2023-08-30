@@ -12,7 +12,7 @@ Logger.Log('name', 'msg')
 
 Logger.Log('name', 'msg1', 'msg2'...)
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 Log(name: LogLevelType | string, ...args: any[]): void;
@@ -25,7 +25,7 @@ Log(name: LogLevelType | string, ...args: any[]): void;
 |  name | [LogLevelType](./koatty_logger.logleveltype.md) \| string |  |
 |  args | any\[\] |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

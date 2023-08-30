@@ -6,7 +6,7 @@
 
 log Error
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 Error(...args: any[]): void;
@@ -18,7 +18,7 @@ Error(...args: any[]): void;
 |  --- | --- | --- |
 |  args | any\[\] |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

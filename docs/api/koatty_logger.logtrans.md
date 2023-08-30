@@ -4,7 +4,7 @@
 
 ## LogTrans interface
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 export interface LogTrans 
@@ -14,6 +14,6 @@ export interface LogTrans
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [Console?](./koatty_logger.logtrans.console.md) |  | transports.ConsoleTransportInstance | _(Optional)_ |
-|  [File?](./koatty_logger.logtrans.file.md) |  | transports.FileTransportInstance | _(Optional)_ |
+|  [Console?](./koatty_logger.logtrans.console.md) |  | transports.ConsoleTransportInstance | <i>(Optional)</i> |
+|  [File?](./koatty_logger.logtrans.file.md) |  | transports.FileTransportInstance | <i>(Optional)</i> |
 

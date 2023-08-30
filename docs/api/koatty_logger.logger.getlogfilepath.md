@@ -6,12 +6,12 @@
 
 getLogFilePath
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 getLogFilePath(): string;
 ```
-**Returns:**
+<b>Returns:</b>
 
 string
 

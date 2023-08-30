@@ -6,7 +6,7 @@
 
 log Warn
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 Warn(...args: any[]): void;
@@ -18,7 +18,7 @@ Warn(...args: any[]): void;
 |  --- | --- | --- |
 |  args | any\[\] |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

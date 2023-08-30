@@ -4,7 +4,7 @@
 
 ## LoggerOpt.logFilePath property
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 logFilePath?: string;

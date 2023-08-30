@@ -6,7 +6,7 @@
 
 setSensFields
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 setSensFields(fields: string[]): void;
@@ -18,7 +18,7 @@ setSensFields(fields: string[]): void;
 |  --- | --- | --- |
 |  fields | string\[\] |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

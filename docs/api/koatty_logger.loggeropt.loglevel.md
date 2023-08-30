@@ -4,7 +4,7 @@
 
 ## LoggerOpt.logLevel property
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 logLevel?: LogLevelType;

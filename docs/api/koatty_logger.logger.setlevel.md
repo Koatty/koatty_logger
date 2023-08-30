@@ -6,7 +6,7 @@
 
 setLevel
 
-**Signature:**
+<b>Signature:</b>
 
 ```typescript
 setLevel(level: LogLevelType): void;
@@ -18,7 +18,7 @@ setLevel(level: LogLevelType): void;
 |  --- | --- | --- |
 |  level | [LogLevelType](./koatty_logger.logleveltype.md) |  |
 
-**Returns:**
+<b>Returns:</b>
 
 void
 

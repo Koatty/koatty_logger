@@ -2,7 +2,7 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-02-21 18:52:28
+ * @LastEditTime: 2023-08-30 15:32:08
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
@@ -288,11 +288,11 @@ export class Logger implements ILogger {
     try {
       label = label ? `[${label}]` : '';
       const params = [`[${timestamp}]`, label, ...ShieldLog(args, this.sensFields)];
-      if (level === "debug") {
-        Error.captureStackTrace(this.emptyObj);
-        const matchResult = (this.emptyObj.stack.slice(this.emptyObj.stack.lastIndexOf("koatty_logger"))).match(/\(.*?\)/g) || [];
-        params.push(matchResult.join("  "));
-      }
+      // if (level === "debug") {
+      //   Error.captureStackTrace(this.emptyObj);
+      //   const matchResult = (this.emptyObj.stack.slice(this.emptyObj.stack.lastIndexOf("koatty_logger"))).match(/\(.*?\)/g) || [];
+      //   params.push(matchResult.join("  "));
+      // }
 
       return util.format.apply(null, params);
     } catch (e) {

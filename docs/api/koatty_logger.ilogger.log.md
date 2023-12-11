@@ -12,7 +12,7 @@ Logger.Log('name', 'msg')
 
 Logger.Log('name', 'msg1', 'msg2'...)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 Log(...msg: any[]): void;
@@ -24,7 +24,7 @@ Log(...msg: any[]): void;
 |  --- | --- | --- |
 |  msg | any\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

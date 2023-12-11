@@ -6,7 +6,7 @@
 
 log Debug
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 Debug(...args: any[]): void;
@@ -18,7 +18,7 @@ Debug(...args: any[]): void;
 |  --- | --- | --- |
 |  args | any\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

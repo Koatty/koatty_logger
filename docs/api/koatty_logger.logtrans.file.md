@@ -4,7 +4,7 @@
 
 ## LogTrans.File property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 File?: transports.FileTransportInstance;

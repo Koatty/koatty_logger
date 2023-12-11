@@ -4,7 +4,7 @@
 
 ## LoggerOpt.sensFields property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 sensFields?: Set<string>;

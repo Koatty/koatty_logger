@@ -6,7 +6,7 @@
 
 enable
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 enable(b?: boolean): void;
@@ -16,9 +16,9 @@ enable(b?: boolean): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  b | boolean | <i>(Optional)</i> |
+|  b | boolean | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

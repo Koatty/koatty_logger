@@ -4,7 +4,7 @@
 
 ## DefaultLogger variable
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 DefaultLogger: Logger

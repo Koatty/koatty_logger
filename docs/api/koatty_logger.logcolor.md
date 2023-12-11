@@ -4,7 +4,7 @@
 
 ## LogColor type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type LogColor = "white" | "blue" | "yellow" | "red";

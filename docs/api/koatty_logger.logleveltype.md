@@ -4,7 +4,7 @@
 
 ## LogLevelType type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type LogLevelType = "debug" | "info" | "warning" | "error";

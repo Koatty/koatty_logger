@@ -4,7 +4,7 @@
 
 ## LogTrans.Console property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 Console?: transports.ConsoleTransportInstance;

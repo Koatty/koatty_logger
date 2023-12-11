@@ -1,5 +1,11 @@
-/**
- * 
+/*
+ * @Description: 
+ * @Usage: 
+ * @Author: richen
+ * @Date: 2021-12-18 12:48:31
+ * @LastEditTime: 2023-12-11 15:39:07
+ * @License: BSD (3-Clause)
+ * @Copyright (c): <richenlin(at)gmail.com>
  */
 module.exports = {
   root: true,
@@ -30,6 +36,7 @@ module.exports = {
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/ban-types": ["error",
       {
         "types": {

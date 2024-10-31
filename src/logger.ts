@@ -2,17 +2,17 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-08-30 15:32:08
+ * @LastEditTime: 2024-10-31 16:30:52
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
-import util from "util";
 import * as helper from "koatty_lib";
-import { ShieldLog } from "./shield";
+import util from "util";
+import { createLogger, format, transports, Logger as wLogger } from "winston";
 import { ILogger, LogLevelType, LogTrans } from "./interface";
-import { format, Logger as wLogger, transports, createLogger } from "winston";
+import { ShieldLog } from "./shield";
 const DailyRotateFile = helper.safeRequire("winston-daily-rotate-file");
-const { combine, timestamp, label, printf } = format;
+const { combine, timestamp, printf } = format;
 
 const LogLevelObj: any = {
   "debug": 7,
@@ -297,6 +297,7 @@ export class Logger implements ILogger {
       return util.format.apply(null, params);
     } catch (e) {
       // console.error(e.stack);
+      this.logger.error(e.stack);
       return "";
     }
   }

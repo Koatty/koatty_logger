@@ -6,7 +6,6 @@
  * @LastEditTime: 2023-01-08 14:50:16
  */
 import * as helper from "koatty_lib";
-import { inspect } from "util";
 
 
 export interface ShieldFieldRes {

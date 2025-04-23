@@ -11,4 +11,4 @@ export * from "./logger";
 export * from "./interface";
 
 //DefaultLogger
-export const DefaultLogger: Logger = new Logger();
+export const DefaultLogger: Logger = Logger.getInstance();

@@ -36,11 +36,9 @@ logger.info('Hello world'); logger.error('Error occurred');
 |  --- | --- | --- |
 |  [debug(args)](./koatty_logger.logger.debug.md) |  | Output debug level log message |
 |  [Debug(args)](./koatty_logger.logger.debug.md) |  | Output debug level log message (alias for debug) |
-|  [destroy()](./koatty_logger.logger.destroy.md) |  | 在对象销毁时刷新缓冲区 |
 |  [enable(b)](./koatty_logger.logger.enable.md) |  | Enable or disable logging |
 |  [error(args)](./koatty_logger.logger.error.md) |  | Log error level message |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | Log error level message (alias for error) |
-|  [flushBuffer()](./koatty_logger.logger.flushbuffer.md) |  | 刷新日志缓冲区 |
 |  [getInstance(opt)](./koatty_logger.logger.getinstance.md) | <code>static</code> | Get singleton instance of Logger |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | Get the current log level. |
 |  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | Gets the current log file path. |
@@ -49,7 +47,6 @@ logger.info('Hello world'); logger.error('Error occurred');
 |  [Info(args)](./koatty_logger.logger.info.md) |  | Log information level message (alias for info) |
 |  [log(name, args)](./koatty_logger.logger.log.md) |  | <p>log</p><p>logger.log('msg') logger.log('name', 'msg') logger.log('name', 'msg1', 'msg2'...)</p> |
 |  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>Log (alias for log)</p><p>Logger.Log('msg') Logger.Log('name', 'msg') Logger.Log('name', 'msg1', 'msg2'...)</p> |
-|  [setBufferOptions(size, interval, enabled)](./koatty_logger.logger.setbufferoptions.md) |  | 设置日志缓冲参数 |
 |  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | Set the log level for the logger |
 |  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | Set the log file path and recreate logger |
 |  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | Set sensitive fields that need to be masked in logs. |

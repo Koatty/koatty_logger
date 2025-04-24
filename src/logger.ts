@@ -2,10 +2,11 @@
  * @Author: richen
  * @Date: 2020-11-20 17:40:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-23 14:08:59
+ * @LastEditTime: 2025-04-24 11:59:00
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
+import fs from "fs";
 import * as helper from "koatty_lib";
 import util from "util";
 import { createLogger, format, transports, Logger as wLogger } from "winston";
@@ -19,15 +20,17 @@ const { combine, timestamp, printf } = format;
 const defaultTransportsOpt = {
   File: {
     level: "info",
-    filename: "./logs/log.log",
     handleExceptions: true,
     json: true,
-    datePattern: 'YYYY-MM-DD-HH',
-    // zippedArchive: true,
+    datePattern: 'YYYY-MM-DD',
     maxSize: '20m',
     maxFiles: '7d',
     colorize: false,
-    timestamp: true
+    timestamp: true,
+    createDirectory: true,
+    zippedArchive: true,
+    dirname: './logs',
+    auditFile: './logs/.audit.json'
   },
   Console: {
     level: "debug",
@@ -82,22 +85,18 @@ export class Logger {
 
   // 日志模板缓存
   private logTemplates: Map<string, string> = new Map();
-  // 日志级别对应的颜色
-  private logColors: Record<LogLevelType, string> = {
-    debug: "\x1b[36m", // 青色
-    info: "\x1b[32m",  // 绿色
-    warning: "\x1b[33m", // 黄色
-    error: "\x1b[31m"  // 红色
-  };
-  // 重置颜色
-  private resetColor = "\x1b[0m";
 
-  // 日志缓冲相关
-  private logBuffer: Array<{ level: LogLevelType, args: any[] }> = [];
-  private bufferSize: number = 10; // 默认缓冲区大小
-  private flushInterval: number = 5000; // 默认刷新间隔（毫秒）
-  private flushTimer: NodeJS.Timeout | null = null;
-  private isBuffering: boolean = false;
+  // 日志级别
+  private logLevel: LogLevelType = "debug";
+  // 默认打开日志
+  private enableLog = true;
+  // 日志对象
+  private emptyObj: any = {};
+  private logger: wLogger;
+  // 文件日志
+  private logFilePath = "";
+  // 脱敏字段
+  private sensFields: Set<string> = new Set();
 
   /**
    * Get singleton instance of Logger
@@ -165,18 +164,6 @@ export class Logger {
 
     return false;
   }
-
-  // 日志级别
-  private logLevel: LogLevelType = "debug";
-  // 默认打开日志
-  private enableLog = true;
-  // 日志对象
-  private emptyObj: any = {};
-  private logger: wLogger;
-  // 文件日志
-  private logFilePath = "";
-  // 脱敏字段
-  private sensFields: Set<string> = new Set();
 
   /**
    * Creates an instance of Logger.
@@ -304,7 +291,6 @@ export class Logger {
     return this.printLog("error", "", args);
   }
 
-
   /**
    * Output debug level log message (alias for debug)
    * @param args The arguments to be logged
@@ -379,99 +365,6 @@ export class Logger {
   }
 
   /**
-   * 设置日志缓冲参数
-   * @param size 缓冲区大小
-   * @param interval 刷新间隔（毫秒）
-   * @param enabled 是否启用缓冲
-   */
-  public setBufferOptions(size: number = 10, interval: number = 5000, enabled: boolean = true): void {
-    this.bufferSize = size;
-    this.flushInterval = interval;
-    this.isBuffering = enabled;
-
-    // 如果启用了缓冲，设置定时器
-    if (this.isBuffering) {
-      this._setupFlushTimer();
-    } else {
-      // 如果禁用了缓冲，立即刷新缓冲区
-      this.flushBuffer();
-    }
-  }
-
-  /**
-   * 设置定时刷新缓冲区
-   * @private
-   */
-  private _setupFlushTimer(): void {
-    // 清除现有定时器
-    if (this.flushTimer) {
-      clearInterval(this.flushTimer);
-    }
-
-    // 设置新定时器
-    this.flushTimer = setInterval(() => {
-      this.flushBuffer();
-    }, this.flushInterval);
-  }
-
-  /**
-   * 刷新日志缓冲区
-   */
-  public flushBuffer(): void {
-    if (this.logBuffer.length === 0) {
-      return;
-    }
-
-    // 按日志级别分组
-    const groupedLogs: Record<LogLevelType, any[][]> = {
-      debug: [],
-      info: [],
-      warning: [],
-      error: []
-    };
-
-    // 将日志按级别分组
-    for (const log of this.logBuffer) {
-      groupedLogs[log.level].push(log.args);
-    }
-
-    // 批量处理每个级别的日志
-    for (const level of Object.keys(groupedLogs) as LogLevelType[]) {
-      const logs = groupedLogs[level];
-      if (logs.length > 0) {
-        switch (level) {
-          case "debug":
-            this.logger.debug(logs);
-            break;
-          case "info":
-            this.logger.info(logs);
-            break;
-          case "warning":
-            this.logger.warning(logs);
-            break;
-          case "error":
-            this.logger.error(logs);
-            break;
-        }
-      }
-    }
-
-    // 清空缓冲区
-    this.logBuffer = [];
-  }
-
-  /**
-   * 在对象销毁时刷新缓冲区
-   */
-  public destroy(): void {
-    this.flushBuffer();
-    if (this.flushTimer) {
-      clearInterval(this.flushTimer);
-      this.flushTimer = null;
-    }
-  }
-
-  /**
    * print console
    *
    * @private
@@ -486,35 +379,8 @@ export class Logger {
         return;
       }
 
-      // 处理名称
-      name = name !== '' ? name.toUpperCase() : level.toUpperCase();
-
-      // 获取日志模板
-      const templateKey = `${level}:${name}`;
-      let template = this.logTemplates.get(templateKey);
-
-      // 如果模板不存在，创建并缓存
-      if (!template) {
-        template = this._createLogTemplate(level, name);
-        this.logTemplates.set(templateKey, template);
-      }
-
       // 处理参数
       const processedArgs = ShieldLog(args, this.sensFields);
-
-      // 如果启用了缓冲，将日志添加到缓冲区
-      if (this.isBuffering) {
-        // 确保 args 是一个数组
-        const bufferArgs = Array.isArray(processedArgs) ? processedArgs : [processedArgs];
-        this.logBuffer.push({ level, args: bufferArgs });
-
-        // 如果缓冲区已满，立即刷新
-        if (this.logBuffer.length >= this.bufferSize) {
-          this.flushBuffer();
-        }
-
-        return;
-      }
 
       // 根据日志级别选择输出方式
       switch (level) {
@@ -545,9 +411,10 @@ export class Logger {
    * @returns {string} 日志模板
    * @memberof Logger
    */
-  private _createLogTemplate(level: LogLevelType, _name: string): string {
-    const color = this.logColors[level];
-    return `${color}[%s] [%s] %s${this.resetColor}`;
+  private _createLogTemplate(_level: LogLevelType, _name: string): string {
+    // 修改模板格式，使其与 format 方法兼容
+    // 格式为: [时间戳] [级别] 消息
+    return `[%s] [%s] %s`;
   }
 
   /**
@@ -563,16 +430,28 @@ export class Logger {
    */
   private format(level: string, label: string, timestamp: string, args: any[] | string): string {
     try {
-      label = label ? `[${label}]` : '';
-      // 使用优化后的ShieldLog函数处理敏感信息
-      const params = [`[${timestamp}]`, label, ...ShieldLog(args, this.sensFields)];
-      // if (level === "debug") {
+      // 缓存转换结果
+      const upperLevel = level.toUpperCase();
+      label = label ? `${label}` : `${upperLevel}`;
+
+      // 获取或创建模板
+      const templateKey = `${level}:${upperLevel}`;
+      let template = this.logTemplates.get(templateKey);
+
+      if (!template) {
+        template = this._createLogTemplate(level as LogLevelType, upperLevel);
+        this.logTemplates.set(templateKey, template);
+      }
+
+      // 不再重复处理敏感信息，因为 args 已经在 printLog 中处理过
+      const params = [timestamp, label, ...args];
+      // if (level === "DEBUG") {
       //   Error.captureStackTrace(this.emptyObj);
       //   const matchResult = (this.emptyObj.stack.slice(this.emptyObj.stack.lastIndexOf("koatty_logger"))).match(/\(.*?\)/g) || [];
       //   params.push(matchResult.join("  "));
       // }
 
-      return util.format.apply(null, params);
+      return util.format.apply(null, [template, ...params]);
     } catch (e) {
       // console.error(e.stack);
       this.logger.error(e.stack);
@@ -586,38 +465,59 @@ export class Logger {
    */
   private createLogger(): wLogger {
     const trans = [];
+
+    // 提取公共的日志格式配置
+    const logFormat = combine(
+      timestamp(),
+      printf((info: any) => {
+        const { level, message, timestamp } = info;
+        // 直接使用 format 方法，避免对 message 进行额外处理
+        return this.format(level, level.toUpperCase(), timestamp, message);
+      })
+    );
+
     if (this.logFilePath != "") {
+      const logDir = this.logFilePath || defaultTransportsOpt.File.dirname;
+
+      // 确保日志目录存在
+      if (!fs.existsSync(logDir)) {
+        fs.mkdirSync(logDir, { recursive: true });
+      }
+
+      // 使用相对路径，避免路径重复
+      const filename = 'log-%DATE%.log';
       const fileTransports = new DailyRotateFile({
         level: this.logLevel,
-        filename: `${(this.logFilePath || './logs/')}/log-%DATE%.log`,
-        ...defaultTransportsOpt.File,
+        filename: filename,
+        dirname: logDir,
+        datePattern: 'YYYY-MM-DD',
+        maxSize: '20m',
+        maxFiles: '14d',
+        zippedArchive: true,
+        json: false,
+        format: logFormat,
       });
+
       trans.push(fileTransports);
-    } else {
-      const cosoleTransports = new transports.Console({
-        level: this.logLevel,
-        // format: format.combine(
-        //   format.colorize(),
-        //   format.simple(),
-        // ),
-        ...defaultTransportsOpt.Console,
-      });
-      trans.push(cosoleTransports);
     }
 
-    return createLogger({
+    // 添加控制台输出
+    const consoleTransports = new transports.Console({
+      level: this.logLevel,
+      format: logFormat,
+    });
+    trans.push(consoleTransports);
+
+    // 创建logger实例
+    const logger = createLogger({
       levels: LogLevelObj,
       transports: trans,
-      format: combine(
-        timestamp({
-          format: "YYYY-MM-DD HH:mm:ss.SSS Z",
-        }),
-        format.json(),
-        printf(({ level, message, label, timestamp }) => {
-          return this.format(level, label, timestamp, message);
-        }),
-      ),
+      exitOnError: false,
+      handleExceptions: true,
+      handleRejections: true,
     });
+
+    return logger;
   }
 
 }

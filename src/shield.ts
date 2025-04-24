@@ -23,22 +23,21 @@ export interface ShieldFieldRes {
 export function ShieldField(str: string): ShieldFieldRes {
   const l = str.length;
   let start, end, res;
-  if (l < 4) {
-    // 规则1：小于4个字符时，完全替换为*
-    start = "*";
+  if (l < 3) {
+    // 规则1：小于3个字符时，完全替换为*
+    start = "";
     end = "";
     res = "*".repeat(l);
-  } else if (l === 4) {
-    // 规则2：4个字符时，替换为 A**B
+  } else if (l === 3) {
+    // 规则2：3个字符时，保留首尾字符
     start = str.charAt(0);
-    end = str.charAt(3);
-    res = `${start}**${end}`;
+    end = str.charAt(2);
+    res = `${start}*${end}`;
   } else {
-    // 规则3：大于4个字符时，替换为 AB*CD，*的个数根据字符串长度决定
-    start = str.substring(0, 2);
-    end = str.substring(l - 2);
-    const starCount = l - 4; // 总长度减去保留的4个字符
-    res = `${start}${"*".repeat(starCount)}${end}`;
+    // 规则3：大于3个字符时，保留前3个字符和后3个字符，中间用***替换
+    start = str.substring(0, 3);
+    end = str.substring(l - 3);
+    res = `${start}***${end}`;
   }
   return { res, start, end }
 }

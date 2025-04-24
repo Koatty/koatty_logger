@@ -4,7 +4,7 @@
 
 ## Logger.enable() method
 
-enable
+Enable or disable logging
 
 **Signature:**
 
@@ -16,7 +16,7 @@ enable(b?: boolean): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  b | boolean | _(Optional)_ |
+|  b | boolean | _(Optional)_ Whether to enable logging, defaults to true |
 
 **Returns:**
 

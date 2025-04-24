@@ -4,6 +4,8 @@
 
 ## LoggerOpt interface
 
+Interface for logger configuration options  LoggerOpt  {<!-- -->LogLevelType<!-- -->} \[logLevel\] - The level of logging to be used  {<!-- -->string<!-- -->} \[logFilePath\] - The file path where logs will be written  {<!-- -->Set<string>} \[sensFields\] - Set of sensitive fields to be masked in logs
+
 **Signature:**
 
 ```typescript

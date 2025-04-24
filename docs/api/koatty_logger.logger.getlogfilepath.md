@@ -4,7 +4,7 @@
 
 ## Logger.getLogFilePath() method
 
-getLogFilePath
+Gets the current log file path.
 
 **Signature:**
 
@@ -14,4 +14,6 @@ getLogFilePath(): string;
 **Returns:**
 
 string
+
+{<!-- -->string<!-- -->} The absolute path of the log file
 

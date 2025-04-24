@@ -8,21 +8,20 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [Logger](./koatty_logger.logger.md) | <p>Logger</p><p> Logger</p> |
+|  [Logger](./koatty_logger.logger.md) | Logger class implements ILogger interface for handling logging operations. Supports multiple log levels, file logging, and sensitive field masking. |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
-|  [ILogger](./koatty_logger.ilogger.md) | <p>Logger interface</p><p>  ILogger</p> |
-|  [LoggerOpt](./koatty_logger.loggeropt.md) |  |
-|  [LogTrans](./koatty_logger.logtrans.md) |  |
+|  [LoggerOpt](./koatty_logger.loggeropt.md) | Interface for logger configuration options  LoggerOpt  {<!-- -->LogLevelType<!-- -->} \[logLevel\] - The level of logging to be used  {<!-- -->string<!-- -->} \[logFilePath\] - The file path where logs will be written  {<!-- -->Set<string>} \[sensFields\] - Set of sensitive fields to be masked in logs |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
 |  [DefaultLogger](./koatty_logger.defaultlogger.md) |  |
+|  [LogLevelObj](./koatty_logger.loglevelobj.md) | Log level mapping object. Defines the severity levels for logging with corresponding numeric values. - debug: 7 (lowest severity) - info: 6 - warning: 4 - error: 3 (highest severity) |
 
 ## Type Aliases
 

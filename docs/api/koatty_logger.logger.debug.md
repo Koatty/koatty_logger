@@ -4,7 +4,7 @@
 
 ## Logger.Debug() method
 
-log Debug
+Output debug level log message (alias for debug)
 
 **Signature:**
 
@@ -16,11 +16,11 @@ Debug(...args: any[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | any\[\] |  |
+|  args | any\[\] | The arguments to be logged |
 
 **Returns:**
 
 void
 
-{<!-- -->\*<!-- -->}  Logger
+void
 

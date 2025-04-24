@@ -4,7 +4,7 @@
 
 ## Logger.setLogFilePath() method
 
-setLogFile
+Set the log file path and recreate logger
 
 **Signature:**
 
@@ -16,7 +16,7 @@ setLogFilePath(f: string): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  f | string |  |
+|  f | string | The file path for logging |
 
 **Returns:**
 

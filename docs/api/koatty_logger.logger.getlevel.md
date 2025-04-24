@@ -4,7 +4,7 @@
 
 ## Logger.getLevel() method
 
-getLevel
+Get the current log level.
 
 **Signature:**
 
@@ -14,4 +14,6 @@ getLevel(): LogLevelType;
 **Returns:**
 
 [LogLevelType](./koatty_logger.logleveltype.md)
+
+{<!-- -->LogLevelType<!-- -->} The current log level.
 

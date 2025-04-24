@@ -4,7 +4,7 @@
 
 ## Logger.Info() method
 
-log Info
+Log information level message (alias for info)
 
 **Signature:**
 
@@ -16,11 +16,11 @@ Info(...args: any[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | any\[\] |  |
+|  args | any\[\] | The arguments to be logged |
 
 **Returns:**
 
 void
 
-{<!-- -->\*<!-- -->}  Logger
+void
 

@@ -4,7 +4,7 @@
 
 ## Logger.setSensFields() method
 
-setSensFields
+Set sensitive fields that need to be masked in logs.
 
 **Signature:**
 
@@ -16,7 +16,7 @@ setSensFields(fields: string[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  fields | string\[\] |  |
+|  fields | string\[\] | Array of field names to be marked as sensitive |
 
 **Returns:**
 

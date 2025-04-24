@@ -4,42 +4,55 @@
 
 ## Logger class
 
-Logger
-
- Logger
+Logger class implements ILogger interface for handling logging operations. Supports multiple log levels, file logging, and sensitive field masking.
 
 **Signature:**
 
 ```typescript
-export declare class Logger implements ILogger 
+export declare class Logger 
 ```
-**Implements:** [ILogger](./koatty_logger.ilogger.md)
 
-## Constructors
+## Example
 
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(opt)](./koatty_logger.logger._constructor_.md) |  | Creates an instance of Logger. |
+// 获取日志记录器实例 const logger = Logger.getInstance(<!-- -->{ logLevel: 'debug', logFilePath: './logs', sensFields: \['password', 'token'\] }<!-- -->);
+
+logger.info('Hello world'); logger.error('Error occurred');
+
+// 如果配置发生变化，将创建新实例 const newLogger = Logger.getInstance(<!-- -->{ logLevel: 'info', logFilePath: './logs', sensFields: \['password', 'token', 'secret'\] }<!-- -->);
+
+// 启用批量日志处理 logger.setBufferOptions(20, 10000, true);
+
+// 批量记录日志 for (let i = 0; i &lt; 100; i++) { logger.info(`Log message ${i}`<!-- -->); }
+
+// 手动刷新缓冲区 logger.flushBuffer();
+
+// 在应用退出时销毁日志记录器 logger.destroy();
+
+ {<!-- -->ILogger<!-- -->}
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [debug(args)](./koatty_logger.logger.debug.md) |  | debug |
-|  [Debug(args)](./koatty_logger.logger.debug.md) |  | log Debug |
-|  [enable(b)](./koatty_logger.logger.enable.md) |  | enable |
-|  [error(args)](./koatty_logger.logger.error.md) |  | error |
-|  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
-|  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
-|  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
-|  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
-|  [info(args)](./koatty_logger.logger.info.md) |  | info |
-|  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
-|  [log(name, args)](./koatty_logger.logger.log.md) |  | log |
-|  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>log Log</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
-|  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | setLevel |
-|  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | setLogFile |
-|  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |
-|  [warn(args)](./koatty_logger.logger.warn.md) |  | warn |
-|  [Warn(args)](./koatty_logger.logger.warn.md) |  | log Warn |
+|  [debug(args)](./koatty_logger.logger.debug.md) |  | Output debug level log message |
+|  [Debug(args)](./koatty_logger.logger.debug.md) |  | Output debug level log message (alias for debug) |
+|  [destroy()](./koatty_logger.logger.destroy.md) |  | 在对象销毁时刷新缓冲区 |
+|  [enable(b)](./koatty_logger.logger.enable.md) |  | Enable or disable logging |
+|  [error(args)](./koatty_logger.logger.error.md) |  | Log error level message |
+|  [Error(args)](./koatty_logger.logger.error.md) |  | Log error level message (alias for error) |
+|  [flushBuffer()](./koatty_logger.logger.flushbuffer.md) |  | 刷新日志缓冲区 |
+|  [getInstance(opt)](./koatty_logger.logger.getinstance.md) | <code>static</code> | Get singleton instance of Logger |
+|  [getLevel()](./koatty_logger.logger.getlevel.md) |  | Get the current log level. |
+|  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | Gets the current log file path. |
+|  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | Get sensitive fields that need to be filtered from logs. |
+|  [info(args)](./koatty_logger.logger.info.md) |  | Log information message |
+|  [Info(args)](./koatty_logger.logger.info.md) |  | Log information level message (alias for info) |
+|  [log(name, args)](./koatty_logger.logger.log.md) |  | <p>log</p><p>logger.log('msg') logger.log('name', 'msg') logger.log('name', 'msg1', 'msg2'...)</p> |
+|  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>Log (alias for log)</p><p>Logger.Log('msg') Logger.Log('name', 'msg') Logger.Log('name', 'msg1', 'msg2'...)</p> |
+|  [setBufferOptions(size, interval, enabled)](./koatty_logger.logger.setbufferoptions.md) |  | 设置日志缓冲参数 |
+|  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | Set the log level for the logger |
+|  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | Set the log file path and recreate logger |
+|  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | Set sensitive fields that need to be masked in logs. |
+|  [warn(args)](./koatty_logger.logger.warn.md) |  | Log warning message |
+|  [Warn(args)](./koatty_logger.logger.warn.md) |  | Log warning level message (alias for warn) |
 

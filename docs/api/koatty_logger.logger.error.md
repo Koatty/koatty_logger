@@ -4,7 +4,7 @@
 
 ## Logger.Error() method
 
-log Error
+Log error level message (alias for error)
 
 **Signature:**
 
@@ -16,11 +16,11 @@ Error(...args: any[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | any\[\] |  |
+|  args | any\[\] | The arguments to be logged |
 
 **Returns:**
 
 void
 
-{<!-- -->\*<!-- -->}  Logger
+void
 

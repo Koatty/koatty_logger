@@ -4,7 +4,7 @@
 
 ## Logger.getSensFields() method
 
-getSensFields
+Get sensitive fields that need to be filtered from logs.
 
 **Signature:**
 
@@ -14,4 +14,6 @@ getSensFields(): Set<string>;
 **Returns:**
 
 Set&lt;string&gt;
+
+{<!-- -->string\[\]<!-- -->} Array of sensitive field names
 

@@ -4,7 +4,7 @@
 
 ## Logger.Warn() method
 
-log Warn
+Log warning level message (alias for warn)
 
 **Signature:**
 
@@ -16,11 +16,11 @@ Warn(...args: any[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | any\[\] |  |
+|  args | any\[\] | The arguments to be logged |
 
 **Returns:**
 
 void
 
-{<!-- -->\*<!-- -->}  Logger
+void
 

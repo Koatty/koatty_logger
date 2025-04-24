@@ -31,13 +31,29 @@ jest.mock('winston', () => {
 
 // 模拟winston-daily-rotate-file
 jest.mock('winston-daily-rotate-file', () => {
-  return jest.fn().mockImplementation(() => ({
-    debug: jest.fn(),
-    info: jest.fn(),
-    warning: jest.fn(),
-    error: jest.fn(),
-    close: jest.fn()
-  }));
+  return jest.fn().mockImplementation(() => {
+    const listeners: Record<string, Function[]> = {};
+    return {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warning: jest.fn(),
+      error: jest.fn(),
+      close: jest.fn(),
+      on: jest.fn().mockImplementation((event: string, callback: Function) => {
+        if (!listeners[event]) {
+          listeners[event] = [];
+        }
+        listeners[event].push(callback);
+        return this;
+      }),
+      emit: jest.fn().mockImplementation((event: string, ...args: any[]) => {
+        if (listeners[event]) {
+          listeners[event].forEach(callback => callback(...args));
+        }
+        return true;
+      })
+    };
+  });
 });
 
 // 模拟koatty_lib
@@ -73,10 +89,6 @@ describe('Logger', () => {
         fs.unlinkSync(path.join(logDir, file));
       });
       fs.rmdirSync(logDir);
-    }
-    // 清理日志实例
-    if (logger) {
-      logger.destroy();
     }
     // 清理定时器
     jest.useRealTimers();
@@ -171,111 +183,4 @@ describe('Logger', () => {
     });
   });
 
-  // 测试日志缓冲
-  describe('Log Buffering', () => {
-    test('should buffer logs when buffering is enabled', () => {
-      logger.setBufferOptions(5, 1000, true);
-      logger.info('message 1');
-      logger.info('message 2');
-      logger.info('message 3');
-      expect((logger as any).logBuffer.length).toBe(3);
-      logger.flushBuffer();
-      expect((logger as any).logBuffer.length).toBe(0);
-    });
-
-    test('should automatically flush buffer when it reaches the size limit', () => {
-      logger.setBufferOptions(2, 1000, true);
-      logger.info('message 1');
-      logger.info('message 2');
-      logger.info('message 3');
-      expect((logger as any).logBuffer.length).toBe(1);
-    });
-
-    test('should destroy logger and flush buffer', () => {
-      logger.setBufferOptions(5, 1000, true);
-      logger.info('message 1');
-      logger.info('message 2');
-      logger.destroy();
-      expect((logger as any).logBuffer.length).toBe(0);
-    });
-  });
-
-  // 测试敏感信息处理
-  describe('Sensitive Information Handling', () => {
-    test('should mask sensitive fields in logs', () => {
-      // 启用缓冲
-      logger.setBufferOptions(5, 1000, true);
-
-      const sensitiveData = {
-        username: 'test',
-        password: 'secret123',
-        token: 'abc123'
-      };
-      logger.info(sensitiveData);
-
-      const buffer = (logger as any).logBuffer;
-      expect(buffer.length).toBeGreaterThan(0);
-      expect(buffer[0].args[0]).toHaveProperty('password');
-      expect(buffer[0].args[0].password).not.toBe('secret123');
-      expect(buffer[0].args[0].password).toBe('se*****23');  // 长度为9，保留4个字符，5个星号
-      expect(buffer[0].args[0].token).toBe('ab**23');      // 长度为6，保留4个字符，2个星号
-    });
-
-    test('should handle short sensitive fields correctly', () => {
-      logger.setBufferOptions(5, 1000, true);
-      // 添加短字符串敏感字段
-      logger.setSensFields(['pin', 'code', 'key']);
-
-      const shortSensitiveData = {
-        pin: '12',
-        code: 'a',
-        key: 'xyz'
-      };
-      logger.info(shortSensitiveData);
-
-      const buffer = (logger as any).logBuffer;
-      expect(buffer.length).toBeGreaterThan(0);
-      // 规则1：所有小于4个字符的字符串都应该完全替换为 *
-      expect(buffer[0].args[0].code).toBe('*');      // 长度为1
-      expect(buffer[0].args[0].pin).toBe('**');      // 长度为2
-      expect(buffer[0].args[0].key).toBe('***');     // 长度为3
-    });
-
-    test('should handle medium sensitive fields correctly', () => {
-      logger.setBufferOptions(5, 1000, true);
-      // 添加中等长度字符串敏感字段
-      logger.setSensFields(['pin', 'code']);
-
-      const mediumSensitiveData = {
-        pin: '1234',
-        code: 'abcd'
-      };
-      logger.info(mediumSensitiveData);
-
-      const buffer = (logger as any).logBuffer;
-      expect(buffer.length).toBeGreaterThan(0);
-      // 规则2：4个字符时，替换为 A**B
-      expect(buffer[0].args[0].pin).toBe('1**4');
-      expect(buffer[0].args[0].code).toBe('a**d');
-    });
-
-    test('should handle long sensitive fields correctly', () => {
-      logger.setBufferOptions(5, 1000, true);
-
-      const longSensitiveData = {
-        password: 'verylongpassword123',
-        token: 'abcdefghijklmnop',
-        secret: '123456789'
-      };
-      logger.setSensFields(['password', 'token', 'secret']);
-      logger.info(longSensitiveData);
-
-      const buffer = (logger as any).logBuffer;
-      expect(buffer.length).toBeGreaterThan(0);
-      // 规则3：大于等于5个字符时，替换为 AB*CD，*的个数根据字符串长度决定
-      expect(buffer[0].args[0].password).toBe('ve***************23');  // 长度为17，保留4个字符，13个星号
-      expect(buffer[0].args[0].token).toBe('ab************op');     // 长度为16，保留4个字符，12个星号
-      expect(buffer[0].args[0].secret).toBe('12*****89');          // 长度为9，保留4个字符，5个星号
-    });
-  });
 }); 

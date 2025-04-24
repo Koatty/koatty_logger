@@ -4,13 +4,9 @@
 
 ## Logger.Log() method
 
-log Log
+Log (alias for log)
 
-Logger.Log('msg')
-
-Logger.Log('name', 'msg')
-
-Logger.Log('name', 'msg1', 'msg2'...)
+Logger.Log('msg') Logger.Log('name', 'msg') Logger.Log('name', 'msg1', 'msg2'...)
 
 **Signature:**
 
@@ -22,8 +18,8 @@ Log(name: LogLevelType | string, ...args: any[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  name | [LogLevelType](./koatty_logger.logleveltype.md) \| string |  |
-|  args | any\[\] |  |
+|  name | [LogLevelType](./koatty_logger.logleveltype.md) \| string | Log level or name |
+|  args | any\[\] | Messages to log |
 
 **Returns:**
 

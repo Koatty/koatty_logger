@@ -4,7 +4,7 @@
 
 ## Logger.setLevel() method
 
-setLevel
+Set the log level for the logger
 
 **Signature:**
 
@@ -16,9 +16,11 @@ setLevel(level: LogLevelType): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  level | [LogLevelType](./koatty_logger.logleveltype.md) |  |
+|  level | [LogLevelType](./koatty_logger.logleveltype.md) | The log level to set. Must be a valid LogLevelType |
 
 **Returns:**
+
+void
 
 void
 

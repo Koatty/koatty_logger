@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/thinkkoa/koatty_logger/compare/v2.1.8...v2.3.0) (2025-06-02)
+
+
+### Features
+
+* batch logging support ([b15cb49](https://github.com/thinkkoa/koatty_logger/commit/b15cb49e7a14133edfce623b2ce9b6b3b02cee66))
+* enhance logger with batch processing and path validation ([fba457d](https://github.com/thinkkoa/koatty_logger/commit/fba457d50f69be736d8eff1cd4b3dae40bf55133))
+
 ## [2.2.0](https://github.com/thinkkoa/koatty_logger/compare/v2.1.8...v2.2.0) (2025-06-02)
 
 

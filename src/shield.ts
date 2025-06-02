@@ -86,9 +86,8 @@ export function ShieldLog(splat: any, fields: Set<string>, keyName?: string, dep
   if (helper.isError(splat)) {
     return splat.message;
   }
-
   if (typeof splat !== "object") {
-    if (fields.has(keyName)) {
+    if (fields.has(keyName || "")) {
       return ShieldField(splat).res;
     }
     return `${splat}`;
@@ -96,7 +95,7 @@ export function ShieldLog(splat: any, fields: Set<string>, keyName?: string, dep
 
   // 优化对象克隆：使用Object.create保持原型链，避免constructor调用
   const cloneSplat = Object.create(Object.getPrototypeOf(splat));
-  
+
   // 使用Object.keys代替for...in，避免原型链属性
   for (const key of Object.keys(splat)) {
     // 递归拷贝

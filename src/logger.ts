@@ -9,8 +9,9 @@
 import * as helper from "koatty_lib";
 import util from "util";
 import { createLogger, format, transports, Logger as wLogger } from "winston";
-import { ILogger, LogLevelType, LogTrans } from "./interface";
+import { BatchConfig, ILogger, LogEntry, LogLevelType, LogTrans } from "./interface";
 import { ShieldLog } from "./shield";
+import path from "path";
 const DailyRotateFile = helper.safeRequire("winston-daily-rotate-file");
 const { combine, timestamp, printf } = format;
 
@@ -70,7 +71,7 @@ export class Logger implements ILogger {
   private sensFields: Set<string> = new Set();
   // 基础日志目录，用于安全验证
   private readonly baseLogDir = path.resolve(process.cwd(), "logs");
-  
+
   // 批量写入相关属性
   private batchConfig: BatchConfig = {
     enabled: false,
@@ -97,7 +98,7 @@ export class Logger implements ILogger {
     if (process.env.LOGS_PATH) {
       this.logFilePath = process.env.LOGS_PATH;
     }
-    if (!helper.isTrueEmpty(opt)) {
+    if (!helper.isTrueEmpty(opt) && opt) {
       this.logLevel = opt.logLevel ?? this.logLevel;
       this.logFilePath = opt.logFilePath ?? this.logFilePath;
       this.sensFields = opt.sensFields ?? this.sensFields;
@@ -196,22 +197,22 @@ export class Logger implements ILogger {
   public destroy() {
     try {
       this.isDestroyed = true;
-      
+
       // 停止批量写入定时器
       this.stopBatchTimer();
-      
+
       // 异步刷新缓冲区，但不等待完成（避免阻塞销毁流程）
       if (this.logBuffer.length > 0) {
         this.flushBatch().catch(e => {
           console.error('Error flushing logs during destroy:', e);
         });
       }
-      
+
       // 关闭winston logger
       if (this.logger) {
         this.logger.close();
       }
-      
+
       // 清理内存引用
       this.sensFields.clear();
       this.transports = {};
@@ -245,7 +246,7 @@ export class Logger implements ILogger {
   public setBatchConfig(config: Partial<BatchConfig>) {
     const wasEnabled = this.batchConfig.enabled;
     this.batchConfig = { ...this.batchConfig, ...config };
-    
+
     // 如果配置改变，重新启动定时器
     if (this.batchConfig.enabled && wasEnabled) {
       this.stopBatchTimer();
@@ -272,7 +273,7 @@ export class Logger implements ILogger {
    */
   public getBatchStatus() {
     return {
-      enabled: this.batchConfig.enabled,
+      enabled: this.batchConfig.enabled || false,
       bufferSize: this.logBuffer.length,
       maxSize: this.batchConfig.maxSize,
       timeSinceLastFlush: Date.now() - this.lastFlushTime
@@ -315,15 +316,15 @@ export class Logger implements ILogger {
     if (this.flushTimer) {
       clearInterval(this.flushTimer);
     }
-    
+
     this.flushTimer = setInterval(() => {
       const now = Date.now();
       const timeSinceLastFlush = now - this.lastFlushTime;
-      
+
       // 检查是否需要刷新（超时或缓冲区满）
-      if (this.logBuffer.length > 0 && 
-          (timeSinceLastFlush >= this.batchConfig.maxWaitTime! || 
-           this.logBuffer.length >= this.batchConfig.maxSize!)) {
+      if (this.logBuffer.length > 0 &&
+        (timeSinceLastFlush >= this.batchConfig.maxWaitTime! ||
+          this.logBuffer.length >= this.batchConfig.maxSize!)) {
         // 异步刷新，不阻塞定时器
         this.flushBatch().catch(e => {
           console.error('Error in timer flush:', e);
@@ -374,13 +375,13 @@ export class Logger implements ILogger {
     try {
       const { level, name, args } = entry;
       const logName = name !== '' ? name.toUpperCase() : level.toUpperCase();
-      
+
       // 对输入参数进行安全过滤
       const sanitizedArgs = args.map(arg => this.sanitizeInput(arg));
-      
+
       // format
       sanitizedArgs.unshift(logName);
-      
+
       // 批量写入时直接调用winston（在批量刷新时已经是异步的）
       this.logger[level](sanitizedArgs);
     } catch (e) {
@@ -406,25 +407,25 @@ export class Logger implements ILogger {
     if (!logPath) {
       throw new Error('Log path cannot be empty');
     }
-    
+
     // 规范化路径
     const normalizedPath = path.normalize(logPath);
-    
+
     // 如果是相对路径，基于baseLogDir解析
-    const resolvedPath = path.isAbsolute(normalizedPath) 
-      ? normalizedPath 
+    const resolvedPath = path.isAbsolute(normalizedPath)
+      ? normalizedPath
       : path.resolve(this.baseLogDir, normalizedPath);
-    
+
     // 确保路径在允许的目录内
     if (!resolvedPath.startsWith(this.baseLogDir)) {
       throw new Error(`Log path must be within ${this.baseLogDir}`);
     }
-    
+
     // 过滤危险字符
     if (/[<>:"|?*\x00-\x1f]/.test(normalizedPath)) {
       throw new Error('Log path contains invalid characters');
     }
-    
+
     return resolvedPath;
   }
 
@@ -544,7 +545,7 @@ export class Logger implements ILogger {
       if (!this.enableLog || this.isDestroyed) {
         return;
       }
-      
+
       // 如果启用批量写入，添加到缓冲区
       if (this.batchConfig.enabled) {
         this.addToBuffer(level, name, args);
@@ -563,13 +564,13 @@ export class Logger implements ILogger {
   private async writeLogAsync(level: LogLevelType, name: string, args: any[]) {
     try {
       const logName = name !== '' ? name.toUpperCase() : level.toUpperCase();
-      
+
       // 对输入参数进行安全过滤
       const sanitizedArgs = args.map(arg => this.sanitizeInput(arg));
-      
+
       // format
       sanitizedArgs.unshift(logName);
-      
+
       // Winston的日志方法本身就是异步的，我们使用Promise.resolve确保异步执行
       return new Promise<void>((resolve, reject) => {
         try {
@@ -627,7 +628,7 @@ export class Logger implements ILogger {
    * @returns 
    */
   private createLogger(): wLogger {
-    const trans = [];
+    const trans: any[] = [];
     if (this.logFilePath != "") {
       defaultLoggerOpt.File.level = this.logLevel;
       defaultLoggerOpt.File.filename = `${(this.logFilePath || './logs/')}/log-%DATE%.log`;
@@ -647,7 +648,7 @@ export class Logger implements ILogger {
           format: "YYYY-MM-DD HH:mm:ss.SSS Z",
         }),
         format.json(),
-        printf(({ level, message, label, timestamp }) => {
+        printf(({ level, message, label, timestamp }: any) => {
           return this.format(level, label, timestamp, message);
         }),
       ),

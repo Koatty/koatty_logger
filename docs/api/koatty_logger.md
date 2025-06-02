@@ -14,7 +14,9 @@
 
 |  Interface | Description |
 |  --- | --- |
+|  [BatchConfig](./koatty_logger.batchconfig.md) |  |
 |  [ILogger](./koatty_logger.ilogger.md) | <p>Logger interface</p><p>  ILogger</p> |
+|  [LogEntry](./koatty_logger.logentry.md) |  |
 |  [LoggerOpt](./koatty_logger.loggeropt.md) |  |
 |  [LogTrans](./koatty_logger.logtrans.md) |  |
 

@@ -25,11 +25,17 @@ export declare class Logger implements ILogger
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [clearSensFields()](./koatty_logger.logger.clearsensfields.md) |  | clearSensFields - 清理敏感字段，防止内存泄漏 |
 |  [debug(args)](./koatty_logger.logger.debug.md) |  | debug |
 |  [Debug(args)](./koatty_logger.logger.debug.md) |  | log Debug |
+|  [destroy()](./koatty_logger.logger.destroy.md) |  | destroy - 销毁Logger实例，释放资源 |
 |  [enable(b)](./koatty_logger.logger.enable.md) |  | enable |
+|  [enableBatch(enabled)](./koatty_logger.logger.enablebatch.md) |  | enableBatch - 启用/禁用批量写入 |
 |  [error(args)](./koatty_logger.logger.error.md) |  | error |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
+|  [flushBatch()](./koatty_logger.logger.flushbatch.md) |  | flushBatch - 立即刷新批量写入缓冲区 |
+|  [getBatchConfig()](./koatty_logger.logger.getbatchconfig.md) |  | getBatchConfig - 获取批量写入配置 |
+|  [getBatchStatus()](./koatty_logger.logger.getbatchstatus.md) |  | getBatchStatus - 获取批量写入状态 |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
 |  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
 |  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
@@ -37,6 +43,8 @@ export declare class Logger implements ILogger
 |  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
 |  [log(name, args)](./koatty_logger.logger.log.md) |  | log |
 |  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>log Log</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
+|  [resetSensFields(fields)](./koatty_logger.logger.resetsensfields.md) |  | resetSensFields - 重置敏感字段为指定列表 |
+|  [setBatchConfig(config)](./koatty_logger.logger.setbatchconfig.md) |  | setBatchConfig - 设置批量写入配置 |
 |  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | setLevel |
 |  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | setLogFile |
 |  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |

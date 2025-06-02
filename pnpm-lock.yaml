@@ -11,9 +11,6 @@ importers:
       koatty_lib:
         specifier: ^1.x.x
         version: 1.3.4
-      koatty_logger:
-        specifier: 'file:'
-        version: file:(koatty_lib@1.3.4)(tslib@2.6.2)
       tslib:
         specifier: ^2.x.x
         version: 2.6.2
@@ -2146,13 +2143,6 @@ packages:
   koatty_lib@1.3.4:
     resolution: {integrity: sha512-Yiy7I6/dEDPp6bR/770XLZeBjz0UAcmS27TJbjV8fEwf/7ANDV3iX7d/5oPUEJV6aUnrhh180uQYHmJuuLJWmA==}
     engines: {node: '>10.0.0'}
-
-  'koatty_logger@file:':
-    resolution: {directory: '', type: directory}
-    engines: {node: '>10.0.0'}
-    peerDependencies:
-      koatty_lib: ^1.x.x
-      tslib: ^2.x.x
 
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
@@ -5681,13 +5671,6 @@ snapshots:
       lodash: 4.17.21
       moment: 2.29.4
       murmurhash: 2.0.1
-
-  koatty_logger@file:(koatty_lib@1.3.4)(tslib@2.6.2):
-    dependencies:
-      koatty_lib: 1.3.4
-      tslib: 2.6.2
-      winston: 3.16.0
-      winston-daily-rotate-file: 4.7.1(winston@3.16.0)
 
   kuler@2.0.0: {}
 

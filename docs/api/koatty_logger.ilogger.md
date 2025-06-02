@@ -18,11 +18,26 @@ export interface ILogger
 
 |  Method | Description |
 |  --- | --- |
+|  [clearSensFields()](./koatty_logger.ilogger.clearsensfields.md) | Clear all sensitive fields |
 |  [Debug(args)](./koatty_logger.ilogger.debug.md) | log Debug |
+|  [destroy()](./koatty_logger.ilogger.destroy.md) | Destroy logger instance and release resources |
+|  [enable(b)](./koatty_logger.ilogger.enable.md) | Enable or disable logging |
+|  [enableBatch(enabled)](./koatty_logger.ilogger.enablebatch.md) | Enable or disable batch writing |
 |  [Error(args)](./koatty_logger.ilogger.error.md) | log Error |
+|  [flushBatch()](./koatty_logger.ilogger.flushbatch.md) | Flush batch buffer immediately |
+|  [getBatchConfig()](./koatty_logger.ilogger.getbatchconfig.md) | Get current batch configuration |
+|  [getBatchStatus()](./koatty_logger.ilogger.getbatchstatus.md) | Get batch writing status |
+|  [getLevel()](./koatty_logger.ilogger.getlevel.md) | Get current log level |
+|  [getLogFilePath()](./koatty_logger.ilogger.getlogfilepath.md) | Get current log file path |
+|  [getSensFields()](./koatty_logger.ilogger.getsensfields.md) | Get sensitive fields |
 |  [Info(args)](./koatty_logger.ilogger.info.md) | log Info |
 |  [Log(msg)](./koatty_logger.ilogger.log.md) | <p>log Custom</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
 |  [Log(name, msg)](./koatty_logger.ilogger.log_1.md) |  |
 |  [Log(name, color, msg)](./koatty_logger.ilogger.log_2.md) |  |
+|  [resetSensFields(fields)](./koatty_logger.ilogger.resetsensfields.md) | Reset sensitive fields to specific list |
+|  [setBatchConfig(config)](./koatty_logger.ilogger.setbatchconfig.md) | Set batch writing configuration |
+|  [setLevel(level)](./koatty_logger.ilogger.setlevel.md) | Set log level |
+|  [setLogFilePath(f)](./koatty_logger.ilogger.setlogfilepath.md) | Set log file path (with security validation) |
+|  [setSensFields(fields)](./koatty_logger.ilogger.setsensfields.md) | Add sensitive fields |
 |  [Warn(args)](./koatty_logger.ilogger.warn.md) | log Warn |
 

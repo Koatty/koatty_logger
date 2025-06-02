@@ -14,6 +14,7 @@ export interface LoggerOpt
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [batchConfig?](./koatty_logger.loggeropt.batchconfig.md) |  | [BatchConfig](./koatty_logger.batchconfig.md) | _(Optional)_ |
 |  [logFilePath?](./koatty_logger.loggeropt.logfilepath.md) |  | string | _(Optional)_ |
 |  [logLevel?](./koatty_logger.loggeropt.loglevel.md) |  | [LogLevelType](./koatty_logger.logleveltype.md) | _(Optional)_ |
 |  [sensFields?](./koatty_logger.loggeropt.sensfields.md) |  | Set&lt;string&gt; | _(Optional)_ |

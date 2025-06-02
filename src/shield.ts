@@ -63,19 +63,24 @@ export function ShieldField(str: string): ShieldFieldRes {
  * @param {*} splat
  * @param {Set<string>} fields
  * @param {string} [keyName]
+ * @param {number} [depth=0] 递归深度
+ * @param {number} [maxDepth=10] 最大递归深度
  * @returns {*}  {*}
  */
-export function ShieldLog(splat: any, fields: Set<string>, keyName?: string): any {
+export function ShieldLog(splat: any, fields: Set<string>, keyName?: string, depth: number = 0, maxDepth: number = 10): any {
   if (fields.size === 0) {
     return splat;
   }
   if (!splat) return splat;
 
+  // 防止过深递归
+  if (depth > maxDepth) {
+    return '[Object: too deep]';
+  }
+
   if (Array.isArray(splat)) {
-    for (let index = 0; index < splat.length; index++) {
-      splat[index] = ShieldLog(splat[index], fields);
-    }
-    return splat;
+    // 使用map代替for循环，更简洁高效
+    return splat.map(item => ShieldLog(item, fields, undefined, depth + 1, maxDepth));
   }
 
   if (helper.isError(splat)) {
@@ -88,12 +93,14 @@ export function ShieldLog(splat: any, fields: Set<string>, keyName?: string): an
     }
     return `${splat}`;
   }
-  const cloneSplat = new splat.constructor();
-  for (const key in splat) {
-    if (splat.hasOwnProperty(key)) {
-      // 递归拷贝
-      cloneSplat[key] = ShieldLog(splat[key], fields, key);
-    }
+
+  // 优化对象克隆：使用Object.create保持原型链，避免constructor调用
+  const cloneSplat = Object.create(Object.getPrototypeOf(splat));
+  
+  // 使用Object.keys代替for...in，避免原型链属性
+  for (const key of Object.keys(splat)) {
+    // 递归拷贝
+    cloneSplat[key] = ShieldLog(splat[key], fields, key, depth + 1, maxDepth);
   }
 
   return cloneSplat;

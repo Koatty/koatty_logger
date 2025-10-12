@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/thinkkoa/koatty_logger/compare/v2.3.0...v2.4.0) (2025-10-12)
+
+
+### Features
+
+* implement buffered logging with sampling and level filtering capabilities ([d7465fd](https://github.com/thinkkoa/koatty_logger/commit/d7465fd107742e3fbdf76f061c8c73b900c1704d))
+* introduce EnhancedLogger with buffering, sampling and dynamic level filtering ([a1f63c3](https://github.com/thinkkoa/koatty_logger/commit/a1f63c3dcc3e2e0a3f2ff9583c75160f1084e2f8))
+
 ## [2.3.0](https://github.com/thinkkoa/koatty_logger/compare/v2.1.8...v2.3.0) (2025-06-02)
 
 

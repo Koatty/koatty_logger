@@ -29,16 +29,20 @@ npm install koatty_logger
 ### 基础使用
 
 ```typescript
+import { DefaultLogger } from 'koatty_logger';
+
+// 使用默认日志器（已开启批量写入优化）
+DefaultLogger.info('应用启动成功');
+DefaultLogger.error('发生错误', new Error('示例错误'));
+DefaultLogger.debug('调试信息', { userId: 123, action: 'login' });
+
+// 或创建自定义logger实例
 import { Logger } from 'koatty_logger';
-
-// 创建logger实例
 const logger = new Logger();
-
-// 基础日志输出
-logger.info('应用启动成功');
-logger.error('发生错误', new Error('示例错误'));
-logger.debug('调试信息', { userId: 123, action: 'login' });
+logger.info('自定义日志器');
 ```
+
+**注意**: `DefaultLogger` 现在默认使用 `EnhancedLogger`，并开启了批量写入优化，具有更好的性能表现。
 
 ### 安全配置
 
@@ -267,6 +271,220 @@ process.on('SIGINT', async () => {
 logger.enableBatch(false); // 错误日志等需要立即写入
 logger.error('Critical error occurred');
 logger.enableBatch(true);  // 重新启用批量写入
+```
+
+## 🚀 增强功能 (EnhancedLogger)
+
+`koatty_logger` 现在提供增强版日志器 `EnhancedLogger`，支持更多高级特性：
+
+### 特性概览
+
+- **智能缓冲**: 可配置的日志缓冲机制，优化批量写入性能
+- **日志采样**: 减少高频日志数量，避免日志洪流
+- **级别过滤**: 运行时动态调整日志级别，灵活控制输出
+- **统计监控**: 实时统计日志处理情况，便于性能分析
+
+### 使用增强日志器
+
+```typescript
+import { createLogger, EnhancedLogger } from 'koatty_logger';
+
+// 方式1: 使用工厂函数（推荐）
+const logger = createLogger({
+  minLevel: 'info',
+  buffer: {
+    enableBuffer: true,
+    maxBufferSize: 100,
+    flushInterval: 1000,
+    flushOnLevel: 'error'
+  },
+  sampling: {
+    sampleRates: new Map([
+      ['high-frequency-api', 0.1],  // 10% 采样率
+      ['debug-trace', 0.05]          // 5% 采样率
+    ])
+  }
+});
+
+// 方式2: 直接实例化
+const enhancedLogger = new EnhancedLogger({
+  minLevel: 'debug',
+  logFilePath: './logs/enhanced.log',
+  buffer: {
+    enableBuffer: true,
+    maxBufferSize: 200,
+    flushInterval: 500
+  }
+});
+```
+
+### 缓冲配置
+
+```typescript
+const logger = createLogger({
+  buffer: {
+    enableBuffer: true,        // 启用缓冲
+    maxBufferSize: 100,        // 缓冲区最大100条
+    flushInterval: 1000,       // 每秒检查一次
+    flushOnLevel: 'error'      // error级别立即刷新
+  }
+});
+
+// 动态调整缓冲配置
+logger.configureBuffering({
+  maxBufferSize: 200,
+  flushInterval: 500
+});
+
+// 手动刷新缓冲区
+await logger.flush();
+
+// 获取统计信息
+const stats = logger.getStats();
+console.log('缓冲区大小:', stats.buffer.bufferSize);
+console.log('总日志数:', stats.buffer.totalLogs);
+console.log('丢弃日志数:', stats.buffer.droppedLogs);
+console.log('丢弃率:', stats.buffer.droppedRate);
+```
+
+### 日志采样
+
+```typescript
+const logger = createLogger({
+  sampling: {
+    sampleRates: new Map([
+      ['api-request', 0.1],      // API请求只记录10%
+      ['database-query', 0.05]   // 数据库查询只记录5%
+    ])
+  }
+});
+
+// 使用采样日志方法
+logger.InfoSampled('api-request', 'API请求', { url: '/api/users', method: 'GET' });
+logger.DebugSampled('database-query', 'SQL查询', { sql: 'SELECT * FROM users' });
+
+// 动态调整采样率
+logger.configureSampling('api-request', 0.2);  // 调整为20%
+
+// 查看采样统计
+const stats = logger.getStats();
+stats.sampling?.forEach((value, key) => {
+  console.log(`${key}: 采样率=${value.sampleRate}, 计数=${value.counter}`);
+});
+```
+
+### 级别过滤
+
+```typescript
+const logger = createLogger({
+  minLevel: 'info'  // 只记录 info 及以上级别
+});
+
+// 这些日志会被过滤掉
+logger.Debug('调试信息');  // ❌ 被过滤
+
+// 这些日志会被记录
+logger.Info('信息日志');   // ✅ 记录
+logger.Warn('警告日志');   // ✅ 记录
+logger.Error('错误日志');  // ✅ 记录
+
+// 动态调整日志级别
+logger.setLogLevel('debug');  // 现在 debug 日志也会被记录
+
+// 查看当前级别
+const stats = logger.getStats();
+console.log('当前最小级别:', stats.minLevel);
+```
+
+### 综合示例
+
+```typescript
+import { createLogger } from 'koatty_logger';
+
+// 生产环境配置
+const productionLogger = createLogger({
+  minLevel: 'info',
+  logFilePath: './logs/production.log',
+  sensFields: new Set(['password', 'token', 'creditCard']),
+  buffer: {
+    enableBuffer: true,
+    maxBufferSize: 200,
+    flushInterval: 1000,
+    flushOnLevel: 'error'
+  },
+  sampling: {
+    sampleRates: new Map([
+      ['http-request', 0.1],
+      ['cache-hit', 0.01]
+    ])
+  }
+});
+
+// 普通日志
+productionLogger.Info('应用启动', { port: 3000 });
+
+// 采样日志（高频场景）
+productionLogger.InfoSampled('http-request', '请求处理', {
+  method: 'GET',
+  url: '/api/users',
+  duration: 45
+});
+
+// 自动脱敏
+productionLogger.Info('用户登录', {
+  username: 'john',
+  password: 'secret123',  // 会被脱敏
+  token: 'abc123xyz'      // 会被脱敏
+});
+
+// 获取统计信息
+const stats = productionLogger.getStats();
+console.log('日志统计:', {
+  缓冲区: stats.buffer,
+  采样: Object.fromEntries(stats.sampling || new Map()),
+  级别: stats.minLevel
+});
+
+// 优雅关闭
+process.on('SIGTERM', async () => {
+  console.log('正在关闭应用...');
+  await productionLogger.flush();
+  productionLogger.stop();
+  process.exit(0);
+});
+```
+
+### 环境变量配置
+
+增强日志器支持以下环境变量：
+
+```bash
+# 日志级别
+export LOG_LEVEL=info            # debug | info | warn | error
+
+# 缓冲配置
+export LOG_BUFFER_SIZE=100       # 缓冲区大小
+export LOG_FLUSH_INTERVAL=1000   # 刷新间隔（毫秒）
+export LOG_FLUSH_ON_LEVEL=error  # 立即刷新的最低级别
+export LOG_ENABLE_BUFFER=true    # 启用/禁用缓冲
+
+# 环境配置（自动调整缓冲行为）
+export NODE_ENV=development      # 开发环境：自动禁用缓冲，日志实时输出
+export NODE_ENV=test             # 测试环境：自动禁用缓冲
+export NODE_ENV=production       # 生产环境：启用缓冲，获得最佳性能
+```
+
+使用示例：
+
+```bash
+# 生产环境（启用批量写入）
+NODE_ENV=production LOG_LEVEL=info npm start
+
+# 开发环境（禁用批量写入，实时输出）
+NODE_ENV=development LOG_LEVEL=debug npm run dev
+
+# 测试环境（禁用批量写入）
+NODE_ENV=test npm test
 ```
 
 ## 🔍 测试

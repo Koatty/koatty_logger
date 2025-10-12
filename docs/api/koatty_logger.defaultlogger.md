@@ -4,8 +4,12 @@
 
 ## DefaultLogger variable
 
+DefaultLogger - 默认开启批量日志处理优化的增强日志器
+
+默认配置： - 启用批量写入缓冲 - 缓冲区大小：100 条 - 刷新间隔：1000ms - error 级别立即刷新
+
 **Signature:**
 
 ```typescript
-DefaultLogger: Logger
+DefaultLogger: EnhancedLogger
 ```

@@ -8,23 +8,37 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [BufferedLogger](./koatty_logger.bufferedlogger.md) | 批量日志处理器 通过缓冲和批量写入减少 I/O 操作 |
+|  [EnhancedLogger](./koatty_logger.enhancedlogger.md) | 增强的日志器 集成批量处理、采样、级别过滤功能 |
 |  [Logger](./koatty_logger.logger.md) | <p>Logger</p><p> Logger</p> |
+|  [LogLevelFilter](./koatty_logger.loglevelfilter.md) | 日志级别过滤器 |
+|  [SamplingLogger](./koatty_logger.samplinglogger.md) | 日志采样器 用于减少高频日志的数量 |
+
+## Functions
+
+|  Function | Description |
+|  --- | --- |
+|  [createLogger(config)](./koatty_logger.createlogger.md) | 创建日志器的工厂函数 |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
 |  [BatchConfig](./koatty_logger.batchconfig.md) |  |
+|  [BufferConfig](./koatty_logger.bufferconfig.md) | 缓冲配置接口 |
 |  [ILogger](./koatty_logger.ilogger.md) | <p>Logger interface</p><p>  ILogger</p> |
 |  [LogEntry](./koatty_logger.logentry.md) |  |
+|  [LoggerConfig](./koatty_logger.loggerconfig.md) | 日志配置接口 - 扩展自 LoggerOpt |
 |  [LoggerOpt](./koatty_logger.loggeropt.md) |  |
+|  [LogStats](./koatty_logger.logstats.md) | 日志统计接口 |
 |  [LogTrans](./koatty_logger.logtrans.md) |  |
+|  [SamplingConfig](./koatty_logger.samplingconfig.md) | 采样配置接口 |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
-|  [DefaultLogger](./koatty_logger.defaultlogger.md) |  |
+|  [DefaultLogger](./koatty_logger.defaultlogger.md) | <p>DefaultLogger - 默认开启批量日志处理优化的增强日志器</p><p>默认配置： - 启用批量写入缓冲 - 缓冲区大小：100 条 - 刷新间隔：1000ms - error 级别立即刷新</p> |
 
 ## Type Aliases
 

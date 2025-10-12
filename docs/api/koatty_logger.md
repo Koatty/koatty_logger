@@ -9,7 +9,7 @@
 |  Class | Description |
 |  --- | --- |
 |  [BufferedLogger](./koatty_logger.bufferedlogger.md) | 批量日志处理器 通过缓冲和批量写入减少 I/O 操作 |
-|  [EnhancedLogger](./koatty_logger.enhancedlogger.md) | 增强的日志器 集成批量处理、采样、级别过滤功能 |
+|  [EnhancedLogger](./koatty_logger.enhancedlogger.md) | <p>增强的日志器 集成批量处理、采样、级别过滤功能</p><p> EnhancedLogger 完全兼容 Logger，继承了所有 Logger 的公共方法： - enable(b: boolean): 启用/禁用日志 - getLevel(): 获取日志级别 - setLevel(level): 设置日志级别（已增强） - getLogFilePath(): 获取日志文件路径 - setLogFilePath(path): 设置日志文件路径 - getSensFields(): 获取敏感字段 - setSensFields(fields): 设置敏感字段 - clearSensFields(): 清除敏感字段 - resetSensFields(fields): 重置敏感字段 - enableBatch(enabled): 启用/禁用批量写入 - setBatchConfig(config): 设置批量配置 - getBatchConfig(): 获取批量配置 - getBatchStatus(): 获取批量状态 - flushBatch(): 刷新批量日志 - destroy(): 销毁日志器（已增强）</p><p>新增功能： - 高级缓冲控制（自动根据环境调整） - 日志采样（减少高频日志） - 级别过滤（动态控制输出级别） - 统计信息（getStats）</p> |
 |  [Logger](./koatty_logger.logger.md) | <p>Logger</p><p> Logger</p> |
 |  [LogLevelFilter](./koatty_logger.loglevelfilter.md) | 日志级别过滤器 |
 |  [SamplingLogger](./koatty_logger.samplinglogger.md) | 日志采样器 用于减少高频日志的数量 |

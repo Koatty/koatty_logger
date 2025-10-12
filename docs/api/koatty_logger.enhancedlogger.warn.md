@@ -7,14 +7,13 @@
 **Signature:**
 
 ```typescript
-Warn(message: string, ...args: any[]): void;
+Warn(...args: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  message | string |  |
 |  args | any\[\] |  |
 
 **Returns:**

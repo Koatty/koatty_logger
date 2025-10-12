@@ -14,6 +14,30 @@ import { LoggerConfig, LogEntry, LogStats, BufferConfig } from './types';
 /**
  * 增强的日志器
  * 集成批量处理、采样、级别过滤功能
+ * 
+ * @description
+ * EnhancedLogger 完全兼容 Logger，继承了所有 Logger 的公共方法：
+ * - enable(b: boolean): 启用/禁用日志
+ * - getLevel(): 获取日志级别
+ * - setLevel(level): 设置日志级别（已增强）
+ * - getLogFilePath(): 获取日志文件路径
+ * - setLogFilePath(path): 设置日志文件路径
+ * - getSensFields(): 获取敏感字段
+ * - setSensFields(fields): 设置敏感字段
+ * - clearSensFields(): 清除敏感字段
+ * - resetSensFields(fields): 重置敏感字段
+ * - enableBatch(enabled): 启用/禁用批量写入
+ * - setBatchConfig(config): 设置批量配置
+ * - getBatchConfig(): 获取批量配置
+ * - getBatchStatus(): 获取批量状态
+ * - flushBatch(): 刷新批量日志
+ * - destroy(): 销毁日志器（已增强）
+ * 
+ * 新增功能：
+ * - 高级缓冲控制（自动根据环境调整）
+ * - 日志采样（减少高频日志）
+ * - 级别过滤（动态控制输出级别）
+ * - 统计信息（getStats）
  */
 export class EnhancedLogger extends Logger {
   private bufferedLogger: BufferedLogger;
@@ -86,7 +110,7 @@ export class EnhancedLogger extends Logger {
   /**
    * 内部日志方法（protected 以避免与父类冲突）
    */
-  protected logWithFilter(level: 'debug' | 'info' | 'warn' | 'error', message: string, ...args: any[]): void {
+  protected logWithFilter(level: 'debug' | 'info' | 'warn' | 'error', args: any[]): void {
     // 级别过滤
     if (!this.levelFilter.shouldLog(level)) {
       return;
@@ -102,45 +126,86 @@ export class EnhancedLogger extends Logger {
         level: logLevel,
         name: '',
         timestamp: Date.now(),
-        args: [message, ...args]
+        args: args
       };
       this.bufferedLogger.addLog(entry);
     } else {
       // 直接调用父类方法
       switch (level) {
         case 'debug':
-          super.Debug(message, ...args);
+          super.Debug(...args);
           break;
         case 'info':
-          super.Info(message, ...args);
+          super.Info(...args);
           break;
         case 'warn':
-          super.Warn(message, ...args);
+          super.Warn(...args);
           break;
         case 'error':
-          super.Error(message, ...args);
+          super.Error(...args);
           break;
       }
     }
   }
 
   /**
-   * 重写日志方法
+   * 重写日志方法 - 保持与父类相同的签名
    */
-  Debug(message: string, ...args: any[]): void {
-    this.logWithFilter('debug', message, ...args);
+  Debug(...args: any[]): void {
+    this.logWithFilter('debug', args);
   }
 
-  Info(message: string, ...args: any[]): void {
-    this.logWithFilter('info', message, ...args);
+  Info(...args: any[]): void {
+    this.logWithFilter('info', args);
   }
 
-  Warn(message: string, ...args: any[]): void {
-    this.logWithFilter('warn', message, ...args);
+  Warn(...args: any[]): void {
+    this.logWithFilter('warn', args);
   }
 
-  Error(message: string, ...args: any[]): void {
-    this.logWithFilter('error', message, ...args);
+  Error(...args: any[]): void {
+    this.logWithFilter('error', args);
+  }
+
+  /**
+   * 小写方法别名 - 保持与父类相同的签名
+   */
+  debug(...args: any[]): void {
+    this.logWithFilter('debug', args);
+  }
+
+  info(...args: any[]): void {
+    this.logWithFilter('info', args);
+  }
+
+  warn(...args: any[]): void {
+    this.logWithFilter('warn', args);
+  }
+
+  error(...args: any[]): void {
+    this.logWithFilter('error', args);
+  }
+
+  /**
+   * 通用日志方法 - 保持与父类相同的签名
+   */
+  Log(name: string, ...args: any[]): void {
+    // 转换 name 为日志级别
+    const level = name.toLowerCase() as 'debug' | 'info' | 'warn' | 'warning' | 'error';
+    
+    // 处理 warning 映射
+    if (level === 'warning' || level === 'warn') {
+      this.logWithFilter('warn', args);
+    } else if (level === 'debug' || level === 'info' || level === 'error') {
+      this.logWithFilter(level, args);
+    } else {
+      // 如果不是标准级别，直接调用父类方法
+      super.Log(name, ...args);
+    }
+  }
+
+  log(name: string, ...args: any[]): void {
+    this.Log(name, ...args);
   }
 
   /**

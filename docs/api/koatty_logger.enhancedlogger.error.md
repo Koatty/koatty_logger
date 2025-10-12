@@ -7,14 +7,13 @@
 **Signature:**
 
 ```typescript
-Error(message: string, ...args: any[]): void;
+Error(...args: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  message | string |  |
 |  args | any\[\] |  |
 
 **Returns:**

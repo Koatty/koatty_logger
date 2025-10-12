@@ -4,19 +4,18 @@
 
 ## EnhancedLogger.Debug() method
 
-重写日志方法
+重写日志方法 - 保持与父类相同的签名
 
 **Signature:**
 
 ```typescript
-Debug(message: string, ...args: any[]): void;
+Debug(...args: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  message | string |  |
 |  args | any\[\] |  |
 
 **Returns:**

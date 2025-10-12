@@ -9,7 +9,7 @@
 **Signature:**
 
 ```typescript
-protected logWithFilter(level: 'debug' | 'info' | 'warn' | 'error', message: string, ...args: any[]): void;
+protected logWithFilter(level: 'debug' | 'info' | 'warn' | 'error', args: any[]): void;
 ```
 
 ## Parameters
@@ -17,7 +17,6 @@ protected logWithFilter(level: 'debug' | 'info' | 'warn' | 'error', message: str
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  level | 'debug' \| 'info' \| 'warn' \| 'error' |  |
-|  message | string |  |
 |  args | any\[\] |  |
 
 **Returns:**

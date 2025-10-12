@@ -7,14 +7,13 @@
 **Signature:**
 
 ```typescript
-Info(message: string, ...args: any[]): void;
+Info(...args: any[]): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  message | string |  |
 |  args | any\[\] |  |
 
 **Returns:**

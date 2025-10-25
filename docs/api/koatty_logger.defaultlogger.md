@@ -6,26 +6,62 @@
 
 导出默认日志器单例
 
-使用方式：
+\#\# 特性 - ✅ \*\*开箱即用\*\*: 无需配置,直接调用即可 - ✅ \*\*动态配置\*\*: 运行时可随时调整日志级别、路径、缓冲等 - ✅ \*\*容错降级\*\*: 初始化失败自动降级到 console 输出 - ✅ \*\*全局单例\*\*: 配置一次,全局生效
+
+\#\# 基础使用（开箱即用）
 
 ```typescript
 import { DefaultLogger } from 'koatty_logger';
 
-// 直接使用（开箱即用）
+// 直接使用 - 无需任何配置
 DefaultLogger.info('Application started');
+DefaultLogger.error('Something went wrong', error);
+DefaultLogger.debug('Debug info', { userId: 123 });
+```
+\#\# 配置使用
 
-// 配置后使用
+```typescript
+// 方式1: 使用 configure() 方法
 DefaultLogger.configure({
   minLevel: 'debug',
   logFilePath: './logs/app.log',
   sensFields: new Set(['password', 'token'])
 });
-DefaultLogger.debug('Debug info');
 
-// 或使用便捷方法
-DefaultLogger.setLogLevel('debug');
-DefaultLogger.setLogFilePath('./logs/app.log');
+// 方式2: 使用便捷方法
+DefaultLogger.setMinLevel('debug');
+DefaultLogger.setLogPath('./logs/app.log');
 DefaultLogger.setSensitiveFields(['password', 'token']);
+```
+\#\# 动态调整
+
+```typescript
+// 运行时动态调整日志级别
+DefaultLogger.setMinLevel('error');  // 只记录错误
+
+// 动态启用高性能缓冲模式
+DefaultLogger.enableBuffering({
+  maxBufferSize: 200,
+  flushInterval: 500
+});
+
+// 动态禁用缓冲,实时输出
+DefaultLogger.disableBuffering();
+
+// 设置采样率
+DefaultLogger.setSamplingRate('api-request', 0.1);
+```
+\#\# 高级用法 如果需要更精细的控制,请使用 `new Logger()`<!-- -->:
+
+```typescript
+import { Logger } from 'koatty_logger';
+
+const customLogger = new Logger({
+  logLevel: 'debug',
+  logFilePath: './logs/custom.log',
+  buffer: { enableBuffer: true, maxBufferSize: 500 },
+  sampling: { sampleRates: new Map([['high-freq', 0.01]]) }
+});
 ```
 
 **Signature:**

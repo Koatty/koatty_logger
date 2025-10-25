@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-export type LogLevelType = "debug" | "info" | "warning" | "error";
+export type LogLevelType = "debug" | "info" | "warning" | "error" | "fatal";
 ```

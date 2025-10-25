@@ -329,6 +329,34 @@ class DefaultLoggerClass implements ILogger {
     this.getInstance().error(...args);
   }
 
+  Fatal(...args: any[]): void {
+    this.getInstance().Fatal(...args);
+  }
+
+  fatal(...args: any[]): void {
+    this.getInstance().fatal(...args);
+  }
+
+  /**
+   * 记录 fatal 日志并优雅退出
+   * @param message - 错误信息
+   * @param exitCode - 退出码,默认 1
+   * @param error - 错误对象(可选)
+   */
+  async fatalAndExit(
+    message: string,
+    exitCode?: number,
+    error?: Error
+  ): Promise<never> {
+    const instance = this.getInstance();
+    if ('fatalAndExit' in instance) {
+      return await instance.fatalAndExit(message, exitCode, error);
+    }
+    // Fallback
+    console.error('[FATAL]', message, error);
+    process.exit(exitCode || 1);
+  }
+
   Log(name: string, ...args: any[]): void {
     this.getInstance().Log(name, ...args);
   }

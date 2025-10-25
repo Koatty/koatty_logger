@@ -23,7 +23,8 @@ const LogLevelObj: any = {
   "debug": 7,
   "info": 6,
   "warning": 4,
-  "error": 3
+  "error": 3,
+  "fatal": 0  // 最高优先级,用于致命错误
 };
 export interface LoggerOpt {
   logLevel?: LogLevelType;
@@ -349,6 +350,24 @@ export class Logger implements ILogger {
   }
 
   /**
+   * Fatal - 致命错误 (同步写入,确保不丢失)
+   * 用于记录导致进程退出的严重错误
+   * 
+   * @param {...any[]} args
+   * @memberof Logger
+   */
+  public Fatal(...args: any[]) {
+    return this.printLogSync("fatal", "", args);
+  }
+
+  /**
+   * fatal - 致命错误 (同步写入,确保不丢失)
+   */
+  public fatal(...args: any[]) {
+    return this.printLogSync("fatal", "", args);
+  }
+
+  /**
    * log Log
    * 
    * Logger.Log('msg')
@@ -428,6 +447,68 @@ export class Logger implements ILogger {
   }
 
   /**
+   * printLogSync - 同步日志打印 (用于 fatal 等关键日志)
+   */
+  private printLogSync(level: LogLevelType, name: string, args: any[]) {
+    try {
+      if (!this.enableLog || this.isDestroyed) {
+        return;
+      }
+
+      // 级别过滤
+      if (this.levelFilter && !this.levelFilter.shouldLog(level)) {
+        return;
+      }
+
+      // fatal 级别强制同步写入,不使用缓冲
+      this.writeLogSync(level, name, args);
+      
+      // 如果有缓冲,立即同步刷新
+      if (this.bufferedLogger) {
+        this.bufferedLogger.flush();
+      }
+      
+    } catch (e) {
+      console.error('[Logger Error in printLogSync]', e);
+      if (args && args.length > 0) {
+        console.error(`[${level.toUpperCase()}]`, ...args);
+      }
+    }
+  }
+
+  /**
+   * writeLogSync - 同步写入日志 (用于 fatal 等关键日志)
+   * 
+   * 注意: 同步写入会阻塞事件循环,仅用于进程即将退出的场景
+   */
+  private writeLogSync(level: LogLevelType, name: string, args: any[]) {
+    try {
+      const logName = name !== '' ? name.toUpperCase() : level.toUpperCase();
+      
+      // 对输入参数进行安全过滤
+      const sanitizedArgs = args.map(arg => this.sanitizeInput(arg));
+      
+      // format
+      sanitizedArgs.unshift(logName);
+      
+      // Winston 不支持 fatal 级别,映射到 error
+      const winstonLevel = level === 'fatal' ? 'error' : level;
+      
+      // 直接同步写入,不使用 setImmediate
+      this.logger[winstonLevel](sanitizedArgs);
+      
+      // 同时输出到 console (确保可见)
+      const consoleMethod = level === 'fatal' || level === 'error' ? 'error' : 
+                            level === 'warning' ? 'warn' : 'log';
+      console[consoleMethod](`[${logName}]`, ...sanitizedArgs.slice(1));
+      
+    } catch (error) {
+      console.error('[Logger Error in writeLogSync]', error);
+      console.error(`[${level.toUpperCase()}]`, ...args);
+    }
+  }
+
+  /**
    * writeLogAsync - 异步写入单个日志条目
    */
   private async writeLogAsync(level: LogLevelType, name: string, args: any[]) {
@@ -440,13 +521,16 @@ export class Logger implements ILogger {
       // format
       sanitizedArgs.unshift(logName);
 
+      // Winston 不支持 fatal 级别,映射到 error
+      const winstonLevel = level === 'fatal' ? 'error' : level;
+      
       // Winston的日志方法本身就是异步的，我们使用Promise.resolve确保异步执行
       return new Promise<void>((resolve, reject) => {
         try {
           // 使用setImmediate确保异步执行，避免阻塞主线程
           setImmediate(() => {
             try {
-              this.logger[level](sanitizedArgs);
+              this.logger[winstonLevel](sanitizedArgs);
               resolve();
             } catch (error) {
               reject(error);
@@ -587,6 +671,48 @@ export class Logger implements ILogger {
    */
   public getMinLevel(): LogLevelType | null {
     return this.levelFilter?.getMinLevel() ?? null;
+  }
+
+  /**
+   * fatalAndExit - 记录 fatal 日志并优雅退出
+   * 
+   * @param message - 错误信息
+   * @param exitCode - 退出码,默认 1
+   * @param error - 错误对象(可选)
+   * 
+   * @example
+   * await logger.fatalAndExit('Database connection failed', 1, error);
+   */
+  public async fatalAndExit(
+    message: string, 
+    exitCode: number = 1,
+    error?: Error
+  ): Promise<never> {
+    try {
+      // 1. 记录 fatal 日志 (同步)
+      if (error) {
+        this.fatal(message, error);
+      } else {
+        this.fatal(message);
+      }
+      
+      // 2. 刷新所有缓冲
+      await this.flush();
+      
+      // 3. 等待一小段时间确保日志写入完成
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // 4. 关闭所有资源
+      await this.destroy();
+      
+    } catch (e) {
+      // 确保错误能输出
+      console.error('[Logger Error in fatalAndExit]', e);
+      console.error('[FATAL]', message, error);
+    } finally {
+      // 5. 退出进程
+      process.exit(exitCode);
+    }
   }
 
   /**

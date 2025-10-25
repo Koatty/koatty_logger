@@ -9,5 +9,5 @@
 **Signature:**
 
 ```typescript
-flushOnLevel?: 'error' | 'warn' | 'info' | 'debug';
+flushOnLevel?: 'error' | 'warn' | 'info' | 'debug' | 'fatal';
 ```

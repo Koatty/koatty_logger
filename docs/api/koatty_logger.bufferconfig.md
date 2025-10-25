@@ -18,6 +18,6 @@ export interface BufferConfig
 |  --- | --- | --- | --- |
 |  [enableBuffer?](./koatty_logger.bufferconfig.enablebuffer.md) |  | boolean | _(Optional)_ 是否启用缓冲（默认true） |
 |  [flushInterval?](./koatty_logger.bufferconfig.flushinterval.md) |  | number | _(Optional)_ 刷新间隔（毫秒，默认1000） |
-|  [flushOnLevel?](./koatty_logger.bufferconfig.flushonlevel.md) |  | 'error' \| 'warn' \| 'info' \| 'debug' | _(Optional)_ 立即刷新的最低级别（默认error） |
+|  [flushOnLevel?](./koatty_logger.bufferconfig.flushonlevel.md) |  | 'error' \| 'warn' \| 'info' \| 'debug' \| 'fatal' | _(Optional)_ 立即刷新的最低级别（默认error） |
 |  [maxBufferSize?](./koatty_logger.bufferconfig.maxbuffersize.md) |  | number | _(Optional)_ 最大缓冲区大小（默认100） |
 

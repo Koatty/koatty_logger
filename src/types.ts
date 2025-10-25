@@ -24,7 +24,7 @@ export interface BufferConfig {
   flushInterval?: number;
   
   /** 立即刷新的最低级别（默认error） */
-  flushOnLevel?: 'error' | 'warn' | 'info' | 'debug';
+  flushOnLevel?: 'error' | 'warn' | 'info' | 'debug' | 'fatal';
   
   /** 是否启用缓冲（默认true） */
   enableBuffer?: boolean;

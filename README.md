@@ -33,8 +33,9 @@ import { DefaultLogger } from 'koatty_logger';
 
 // 🎉 开箱即用 - 零配置,立即可用
 DefaultLogger.info('应用启动成功');
-DefaultLogger.error('发生错误', new Error('示例错误'));
 DefaultLogger.warn('警告信息');
+DefaultLogger.error('发生错误', new Error('示例错误'));
+DefaultLogger.fatal('致命错误');  // ⚡ 新增:同步写入,进程退出时不丢失
 
 // 💡 可选：配置日志级别和文件路径
 DefaultLogger.configure({
@@ -89,9 +90,42 @@ userServiceLogger.debug('用户服务日志');
 - **微服务架构**: 使用 `new Logger()` (隔离、独立、灵活)
 - **混合使用**: 主应用用 `DefaultLogger`,关键模块用独立 `Logger`
 
+### Fatal 日志级别 (v2.7+)
+
+**解决进程退出时日志丢失问题**:
+
+```typescript
+// ❌ 问题: 异步日志在进程退出时会丢失
+DefaultLogger.error('Critical error');
+process.exit(1);  // 日志可能丢失!
+
+// ✅ 解决方案1: 使用 fatal (同步写入)
+DefaultLogger.fatal('Critical error');
+process.exit(1);  // 日志已写入,不会丢失
+
+// ✅ 解决方案2: 使用 fatalAndExit (推荐)
+await DefaultLogger.fatalAndExit('Critical error', 1);
+
+// ✅ 解决方案3: 全局异常处理
+process.on('uncaughtException', async (error) => {
+  await DefaultLogger.fatalAndExit('Uncaught exception', 1, error);
+});
+```
+
+**Fatal 特性**:
+- ⚡ **同步写入** - 确保日志不丢失
+- 🎯 **最高优先级** - 总是被记录
+- 📝 **双重输出** - 同时写入文件和 console
+- 🚀 **立即刷新** - 触发缓冲区刷新
+
+详细文档: [Fatal 日志级别指南](./docs/Fatal_Level_Guide.md)
+
+---
+
 详细示例请参考：
 - [DefaultLogger 综合示例](./examples/default_logger_comprehensive.ts)
 - [Logger 对比示例](./examples/logger_comparison.ts)
+- [Fatal 日志示例](./examples/fatal_example.ts)
 
 ### 安全配置
 

@@ -10,7 +10,7 @@ import { transports } from "winston";
 // LogColor
 export type LogColor = "white" | "blue" | "yellow" | "red";
 // 日志级别
-export type LogLevelType = "debug" | "info" | "warning" | "error";
+export type LogLevelType = "debug" | "info" | "warning" | "error" | "fatal";
 // LogTrans
 export interface LogTrans {
   Console?: transports.ConsoleTransportInstance;

@@ -36,6 +36,9 @@ export declare class Logger implements ILogger
 |  [error(args)](./koatty_logger.logger.error.md) |  | error |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
 |  [ErrorSampled(key, message, args)](./koatty_logger.logger.errorsampled.md) |  | 采样日志方法 - Error |
+|  [fatal(args)](./koatty_logger.logger.fatal.md) |  | fatal - 致命错误 (同步写入,确保不丢失) |
+|  [Fatal(args)](./koatty_logger.logger.fatal.md) |  | Fatal - 致命错误 (同步写入,确保不丢失) 用于记录导致进程退出的严重错误 |
+|  [fatalAndExit(message, exitCode, error)](./koatty_logger.logger.fatalandexit.md) |  | fatalAndExit - 记录 fatal 日志并优雅退出 |
 |  [flush()](./koatty_logger.logger.flush.md) |  | 手动刷新缓冲区 |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
 |  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |

@@ -75,7 +75,8 @@ private shouldFlushImmediately(level: string): boolean {
     'info': 1,
     'warn': 2,
     'warning': 2,
-    'error': 3
+    'error': 3,
+    'fatal': 4  // 最高优先级,总是立即刷新
   };
   const currentLevel = levelMap[level] ?? 1;
   const flushLevel = levelMap[this.config.flushOnLevel] ?? 3;

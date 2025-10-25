@@ -143,37 +143,5 @@ export interface ILogger {
   /**
    * Destroy logger instance and release resources
    */
-  destroy(): void;
-
-  /**
-   * Enable or disable batch writing
-   * @param enabled - whether to enable batch writing
-   */
-  enableBatch(enabled?: boolean): void;
-
-  /**
-   * Set batch writing configuration
-   * @param config - batch configuration
-   */
-  setBatchConfig(config: Partial<BatchConfig>): void;
-
-  /**
-   * Get current batch configuration
-   */
-  getBatchConfig(): BatchConfig;
-
-  /**
-   * Get batch writing status
-   */
-  getBatchStatus(): {
-    enabled: boolean;
-    bufferSize: number;
-    maxSize?: number;
-    timeSinceLastFlush: number;
-  };
-
-  /**
-   * Flush batch buffer immediately
-   */
-  flushBatch(): Promise<void>;
+  destroy(): Promise<void>;
 }

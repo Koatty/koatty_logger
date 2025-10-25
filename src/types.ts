@@ -66,6 +66,6 @@ export interface LogStats {
     sampleRate: number;
     counter: number;
   }>;
-  minLevel: string;
+  minLevel: LogLevelType;
 }
 

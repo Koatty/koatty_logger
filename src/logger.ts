@@ -6,13 +6,17 @@
  * @License: BSD (3-Clause)
  * @Copyright (c) - <richenlin(at)gmail.com>
  */
-import * as helper from "koatty_lib";
+import {Helper} from "koatty_lib";
 import util from "util";
 import { createLogger, format, transports, Logger as wLogger } from "winston";
-import { BatchConfig, ILogger, LogEntry, LogLevelType, LogTrans } from "./interface";
+import { ILogger, LogEntry, LogLevelType, LogTrans } from "./interface";
 import { ShieldLog } from "./shield";
+import { BufferedLogger } from "./buffered_logger";
+import { SamplingLogger } from "./sampling";
+import { LogLevelFilter } from "./level_filter";
+import type { BufferConfig, LogStats } from "./types";
 import path from "path";
-const DailyRotateFile = helper.safeRequire("winston-daily-rotate-file");
+const DailyRotateFile = Helper.safeRequire("winston-daily-rotate-file");
 const { combine, timestamp, printf } = format;
 
 const LogLevelObj: any = {
@@ -25,7 +29,16 @@ export interface LoggerOpt {
   logLevel?: LogLevelType;
   logFilePath?: string;
   sensFields?: Set<string>;
-  batchConfig?: BatchConfig;     // 批量写入配置
+  
+  // ============ 增强功能配置 ============
+  /** 缓冲配置 */
+  buffer?: import('./types').BufferConfig;
+  
+  /** 采样配置 */
+  sampling?: import('./types').SamplingConfig;
+  
+  /** 最小日志级别 - 用于级别过滤 */
+  minLevel?: LogLevelType;
 }
 
 // defaultLoggerOpt
@@ -72,16 +85,11 @@ export class Logger implements ILogger {
   // 基础日志目录，用于安全验证
   private readonly baseLogDir = path.resolve(process.cwd(), "logs");
 
-  // 批量写入相关属性
-  private batchConfig: BatchConfig = {
-    enabled: false,
-    maxSize: 100,
-    flushInterval: 1000,      // 1秒
-    maxWaitTime: 5000         // 5秒
-  };
-  private logBuffer: LogEntry[] = [];
-  private flushTimer: NodeJS.Timeout | null = null;
-  private lastFlushTime: number = Date.now();
+  // ============ 增强功能属性 ============
+  private bufferedLogger?: BufferedLogger;
+  private samplingLogger?: SamplingLogger;
+  private levelFilter?: LogLevelFilter;
+  private enableEnhancedBuffering: boolean = false;
   private isDestroyed: boolean = false;
 
   /**
@@ -98,23 +106,38 @@ export class Logger implements ILogger {
     if (process.env.LOGS_PATH) {
       this.logFilePath = process.env.LOGS_PATH;
     }
-    if (!helper.isTrueEmpty(opt) && opt) {
+    if (!Helper.isTrueEmpty(opt) && opt) {
       this.logLevel = opt.logLevel ?? this.logLevel;
       this.logFilePath = opt.logFilePath ?? this.logFilePath;
       this.sensFields = opt.sensFields ?? this.sensFields;
-      
-      // 配置批量写入
-      if (opt.batchConfig) {
-        this.batchConfig = { ...this.batchConfig, ...opt.batchConfig };
+
+      // ============ 初始化增强功能 ============
+      // 初始化缓冲功能
+      if (opt.buffer) {
+        this.bufferedLogger = new BufferedLogger(opt.buffer);
+        this.bufferedLogger.setFlushCallback((entries) => {
+          this.flushEnhancedEntries(entries);
+        });
+        this.enableEnhancedBuffering = opt.buffer.enableBuffer !== false;
+      }
+
+      // 初始化采样功能
+      if (opt.sampling) {
+        this.samplingLogger = new SamplingLogger();
+        if (opt.sampling.sampleRates) {
+          opt.sampling.sampleRates.forEach((rate, key) => {
+            this.samplingLogger!.setSampleRate(key, rate);
+          });
+        }
+      }
+
+      // 初始化级别过滤
+      if (opt.minLevel) {
+        this.levelFilter = new LogLevelFilter(opt.minLevel);
       }
     }
 
     this.logger = this.createLogger();
-    
-    // 如果启用批量写入，开始定时器
-    if (this.batchConfig.enabled) {
-      this.startBatchTimer();
-    }
   }
 
   /**
@@ -194,18 +217,13 @@ export class Logger implements ILogger {
   /**
    * destroy - 销毁Logger实例，释放资源
    */
-  public destroy() {
+  public async destroy() {
     try {
       this.isDestroyed = true;
 
-      // 停止批量写入定时器
-      this.stopBatchTimer();
-
-      // 异步刷新缓冲区，但不等待完成（避免阻塞销毁流程）
-      if (this.logBuffer.length > 0) {
-        this.flushBatch().catch(e => {
-          console.error('Error flushing logs during destroy:', e);
-        });
+      // 停止增强缓冲
+      if (this.bufferedLogger) {
+        await this.bufferedLogger.stop();
       }
 
       // 关闭winston logger
@@ -217,177 +235,11 @@ export class Logger implements ILogger {
       this.sensFields.clear();
       this.transports = {};
       this.enableLog = false;
-      this.logBuffer = [];
     } catch (e) {
       console.error('Error destroying logger:', e);
     }
   }
 
-  /**
-   * enableBatch - 启用/禁用批量写入
-   */
-  public enableBatch(enabled: boolean = true) {
-    if (enabled && !this.batchConfig.enabled) {
-      this.batchConfig.enabled = true;
-      this.startBatchTimer();
-    } else if (!enabled && this.batchConfig.enabled) {
-      this.batchConfig.enabled = false;
-      this.stopBatchTimer();
-      // 异步刷新剩余的日志
-      this.flushBatch().catch(e => {
-        console.error('Error flushing logs when disabling batch:', e);
-      });
-    }
-  }
-
-  /**
-   * setBatchConfig - 设置批量写入配置
-   */
-  public setBatchConfig(config: Partial<BatchConfig>) {
-    const wasEnabled = this.batchConfig.enabled;
-    this.batchConfig = { ...this.batchConfig, ...config };
-
-    // 如果配置改变，重新启动定时器
-    if (this.batchConfig.enabled && wasEnabled) {
-      this.stopBatchTimer();
-      this.startBatchTimer();
-    } else if (this.batchConfig.enabled && !wasEnabled) {
-      this.startBatchTimer();
-    } else if (!this.batchConfig.enabled && wasEnabled) {
-      this.stopBatchTimer();
-      this.flushBatch().catch(e => {
-        console.error('Error flushing logs when disabling batch via config:', e);
-      });
-    }
-  }
-
-  /**
-   * getBatchConfig - 获取批量写入配置
-   */
-  public getBatchConfig(): BatchConfig {
-    return { ...this.batchConfig };
-  }
-
-  /**
-   * getBatchStatus - 获取批量写入状态
-   */
-  public getBatchStatus() {
-    return {
-      enabled: this.batchConfig.enabled || false,
-      bufferSize: this.logBuffer.length,
-      maxSize: this.batchConfig.maxSize,
-      timeSinceLastFlush: Date.now() - this.lastFlushTime
-    };
-  }
-
-  /**
-   * flushBatch - 立即刷新批量写入缓冲区
-   */
-  public async flushBatch(): Promise<void> {
-    if (this.logBuffer.length === 0 || this.isDestroyed) {
-      return;
-    }
-
-    const logsToFlush = [...this.logBuffer];
-    this.logBuffer = [];
-    this.lastFlushTime = Date.now();
-
-    // 异步批量处理日志 - 避免阻塞主线程
-    return new Promise<void>((resolve) => {
-      setImmediate(() => {
-        try {
-          // 批量写入所有日志
-          logsToFlush.forEach(entry => {
-            this.writeLogEntry(entry);
-          });
-          resolve();
-        } catch (e) {
-          console.error('Error in batch flush:', e);
-          resolve(); // 即使出错也要resolve，避免阻塞
-        }
-      });
-    });
-  }
-
-  /**
-   * startBatchTimer - 启动批量写入定时器
-   */
-  private startBatchTimer() {
-    if (this.flushTimer) {
-      clearInterval(this.flushTimer);
-    }
-
-    this.flushTimer = setInterval(() => {
-      const now = Date.now();
-      const timeSinceLastFlush = now - this.lastFlushTime;
-
-      // 检查是否需要刷新（超时或缓冲区满）
-      if (this.logBuffer.length > 0 &&
-        (timeSinceLastFlush >= this.batchConfig.maxWaitTime! ||
-          this.logBuffer.length >= this.batchConfig.maxSize!)) {
-        // 异步刷新，不阻塞定时器
-        this.flushBatch().catch(e => {
-          console.error('Error in timer flush:', e);
-        });
-      }
-    }, this.batchConfig.flushInterval);
-  }
-
-  /**
-   * stopBatchTimer - 停止批量写入定时器
-   */
-  private stopBatchTimer() {
-    if (this.flushTimer) {
-      clearInterval(this.flushTimer);
-      this.flushTimer = null;
-    }
-  }
-
-  /**
-   * addToBuffer - 添加日志到缓冲区
-   */
-  private addToBuffer(level: LogLevelType, name: string, args: any[]) {
-    if (this.isDestroyed) {
-      return;
-    }
-
-    const logEntry: LogEntry = {
-      level,
-      name,
-      args,
-      timestamp: Date.now()
-    };
-
-    this.logBuffer.push(logEntry);
-
-    // 如果缓冲区达到最大大小，立即异步刷新
-    if (this.logBuffer.length >= this.batchConfig.maxSize!) {
-      this.flushBatch().catch(e => {
-        console.error('Error in immediate flush:', e);
-      });
-    }
-  }
-
-  /**
-   * writeLogEntry - 写入单个日志条目
-   */
-  private writeLogEntry(entry: LogEntry) {
-    try {
-      const { level, name, args } = entry;
-      const logName = name !== '' ? name.toUpperCase() : level.toUpperCase();
-
-      // 对输入参数进行安全过滤
-      const sanitizedArgs = args.map(arg => this.sanitizeInput(arg));
-
-      // format
-      sanitizedArgs.unshift(logName);
-
-      // 批量写入时直接调用winston（在批量刷新时已经是异步的）
-      this.logger[level](sanitizedArgs);
-    } catch (e) {
-      console.error('Error writing log entry:', e);
-    }
-  }
 
   /**
    * sanitizeInput - 过滤危险字符，防止日志注入
@@ -546,15 +398,32 @@ export class Logger implements ILogger {
         return;
       }
 
-      // 如果启用批量写入，添加到缓冲区
-      if (this.batchConfig.enabled) {
-        this.addToBuffer(level, name, args);
-      } else {
-        // 默认异步写入
+      // ============ 增强功能：级别过滤 ============
+      if (this.levelFilter && !this.levelFilter.shouldLog(level)) {
+        return;
+      }
+
+      // ============ 增强功能：使用缓冲 ============
+      if (this.enableEnhancedBuffering && this.bufferedLogger) {
+        const entry: LogEntry = {
+          level,
+          name,
+          timestamp: Date.now(),
+          args
+        };
+        this.bufferedLogger.addLog(entry);
+      } 
+      // ============ 默认异步写入 ============
+      else {
         this.writeLogAsync(level, name, args);
       }
     } catch (e) {
-      console.error('Error in printLog:', e);
+      // 确保错误能输出,即使winston未初始化
+      console.error('[Logger Error in printLog]', e);
+      // 同时尝试输出原始日志内容
+      if (args && args.length > 0) {
+        console.error(`[${level.toUpperCase()}]`, ...args);
+      }
     }
   }
 
@@ -587,10 +456,18 @@ export class Logger implements ILogger {
           reject(error);
         }
       }).catch(e => {
-        console.error('Error in async log write:', e);
+        console.error('[Logger Error in async log write]', e);
+        // 输出原始日志内容作为后备
+        if (args && args.length > 0) {
+          console.error(`[${level.toUpperCase()}]`, ...args);
+        }
       });
     } catch (e) {
-      console.error('Error in writeLogAsync:', e);
+      console.error('[Logger Error in writeLogAsync]', e);
+      // 输出原始日志内容作为后备
+      if (args && args.length > 0) {
+        console.error(`[${level.toUpperCase()}]`, ...args);
+      }
     }
   }
 
@@ -653,6 +530,136 @@ export class Logger implements ILogger {
         }),
       ),
     });
+  }
+
+  // ============ 增强功能方法 ============
+
+  /**
+   * 刷新增强缓冲区的日志条目
+   * @private
+   */
+  private flushEnhancedEntries(entries: LogEntry[]): void {
+    for (const entry of entries) {
+      this.writeLogAsync(entry.level, entry.name, entry.args);
+    }
+  }
+
+  /**
+   * 配置缓冲功能
+   */
+  public configureBuffering(config: Partial<BufferConfig>): void {
+    if (!this.bufferedLogger) {
+      this.bufferedLogger = new BufferedLogger(config);
+      this.bufferedLogger.setFlushCallback((entries) => {
+        this.flushEnhancedEntries(entries);
+      });
+    } else {
+      this.bufferedLogger.updateConfig(config);
+    }
+    this.enableEnhancedBuffering = config.enableBuffer !== false;
+  }
+
+  /**
+   * 配置采样功能
+   */
+  public configureSampling(key: string, rate: number): void {
+    if (!this.samplingLogger) {
+      this.samplingLogger = new SamplingLogger();
+    }
+    this.samplingLogger.setSampleRate(key, rate);
+  }
+
+  /**
+   * 设置最小日志级别（用于过滤）
+   */
+  public setMinLevel(level: LogLevelType): void {
+    if (!this.levelFilter) {
+      this.levelFilter = new LogLevelFilter(level);
+    } else {
+      this.levelFilter.setMinLevel(level);
+    }
+    // 同时更新基础日志级别
+    this.setLevel(level);
+  }
+
+  /**
+   * 获取最小日志级别
+   */
+  public getMinLevel(): LogLevelType | null {
+    return this.levelFilter?.getMinLevel() ?? null;
+  }
+
+  /**
+   * 采样日志方法 - Debug
+   */
+  public DebugSampled(key: string, message: string, ...args: any[]): void {
+    if (this.samplingLogger?.shouldSample(key)) {
+      this.Debug(message, ...args);
+    }
+  }
+
+  /**
+   * 采样日志方法 - Info
+   */
+  public InfoSampled(key: string, message: string, ...args: any[]): void {
+    if (this.samplingLogger?.shouldSample(key)) {
+      this.Info(message, ...args);
+    }
+  }
+
+  /**
+   * 采样日志方法 - Warn
+   */
+  public WarnSampled(key: string, message: string, ...args: any[]): void {
+    if (this.samplingLogger?.shouldSample(key)) {
+      this.Warn(message, ...args);
+    }
+  }
+
+  /**
+   * 采样日志方法 - Error
+   */
+  public ErrorSampled(key: string, message: string, ...args: any[]): void {
+    if (this.samplingLogger?.shouldSample(key)) {
+      this.Error(message, ...args);
+    }
+  }
+
+  /**
+   * 获取统计信息
+   */
+  public getStats(): LogStats | null {
+    if (!this.bufferedLogger) {
+      return null;
+    }
+
+    const minLevel: LogLevelType = this.levelFilter?.getMinLevel() ?? 'debug';
+    return {
+      buffer: this.bufferedLogger.getStats(),
+      sampling: this.samplingLogger?.getStats(),
+      minLevel
+    };
+  }
+
+  /**
+   * 手动刷新缓冲区
+   */
+  public async flush(): Promise<void> {
+    if (this.bufferedLogger) {
+      await this.bufferedLogger.flush();
+    }
+  }
+
+  /**
+   * 停止日志器，刷新所有待写入的日志
+   */
+  public async stop(): Promise<void> {
+    this.isDestroyed = true;
+    
+    // 停止增强缓冲
+    if (this.bufferedLogger) {
+      await this.bufferedLogger.stop();
+    }
   }
 
 }

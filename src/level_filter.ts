@@ -5,41 +5,42 @@
  * @Date: 2025-10-12
  * @LastEditTime: 2025-10-12
  */
+import { LogLevelType } from './interface';
 
 /**
  * 日志级别过滤器
  */
 export class LogLevelFilter {
-  private minLevel: 'debug' | 'info' | 'warn' | 'error';
-  private readonly levelPriority = {
+  private minLevel: LogLevelType;
+  private readonly levelPriority: Record<LogLevelType, number> = {
     debug: 0,
     info: 1,
-    warn: 2,
+    warning: 2,
     error: 3
   };
 
-  constructor(minLevel: 'debug' | 'info' | 'warn' | 'error' = 'info') {
+  constructor(minLevel: LogLevelType = 'info') {
     this.minLevel = minLevel;
   }
 
   /**
    * 设置最小日志级别
    */
-  setMinLevel(level: 'debug' | 'info' | 'warn' | 'error'): void {
+  setMinLevel(level: LogLevelType): void {
     this.minLevel = level;
   }
 
   /**
    * 判断是否应该记录此级别的日志
    */
-  shouldLog(level: 'debug' | 'info' | 'warn' | 'error'): boolean {
+  shouldLog(level: LogLevelType): boolean {
     return this.levelPriority[level] >= this.levelPriority[this.minLevel];
   }
 
   /**
    * 获取当前最小级别
    */
-  getMinLevel(): string {
+  getMinLevel(): LogLevelType {
     return this.minLevel;
   }
 }

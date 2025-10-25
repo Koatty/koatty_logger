@@ -1,11 +1,13 @@
-## <small>2.7.1 (2025-10-25)</small>
-
-
-
-
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [2.8.0](https://github.com/thinkkoa/koatty_logger/compare/v2.7.0...v2.8.0) (2025-10-25)
+
+
+### Features
+
+* **logger:** add hot reload capability to DefaultLogger configure method ([1070240](https://github.com/thinkkoa/koatty_logger/commit/10702404a6d1997b605149c1d236a09f029c55ea))
 
 ## [2.7.0](https://github.com/thinkkoa/koatty_logger/compare/v2.5.0...v2.7.0) (2025-10-25)
 

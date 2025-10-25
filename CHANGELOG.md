@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/thinkkoa/koatty_logger/compare/v2.5.0...v2.7.0) (2025-10-25)
+
+
+### Features
+
+* add Log method and enhance logger compatibility ([dd648c6](https://github.com/thinkkoa/koatty_logger/commit/dd648c6ccaa25d3027721bc50620e374f49f3c77))
+* enhance logger compatibility with parent class and add new Log method ([f10611a](https://github.com/thinkkoa/koatty_logger/commit/f10611a8a739bcc6b8bfcf14e8db828c8a04eaf2))
+* enhance logger with lazy loading and buffering ([6700d28](https://github.com/thinkkoa/koatty_logger/commit/6700d28682541b3531b8491e3077ef6d170bb399))
+
 ## [2.6.0](https://github.com/thinkkoa/koatty_logger/compare/v2.5.0...v2.6.0) (2025-10-25)
 
 

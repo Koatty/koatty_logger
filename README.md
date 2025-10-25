@@ -26,36 +26,72 @@ npm install koatty_logger
 
 ## 🚀 快速开始
 
-### 基础使用
+### 基础使用（推荐大多数场景）
 
 ```typescript
 import { DefaultLogger } from 'koatty_logger';
 
-// 🎉 开箱即用 - 无需任何配置或初始化
+// 🎉 开箱即用 - 零配置,立即可用
 DefaultLogger.info('应用启动成功');
 DefaultLogger.error('发生错误', new Error('示例错误'));
-DefaultLogger.debug('调试信息', { userId: 123, action: 'login' });
+DefaultLogger.warn('警告信息');
 
-// 💡 可选：在使用前配置（推荐）
+// 💡 可选：配置日志级别和文件路径
 DefaultLogger.configure({
-  minLevel: 'info',
+  minLevel: 'debug',
   logFilePath: './logs/app.log',
   sensFields: new Set(['password', 'token'])
 });
 
-// 或创建自定义logger实例
-import { Logger } from 'koatty_logger';
-const logger = new Logger();
-logger.info('自定义日志器');
+// 💡 动态调整配置（运行时）
+DefaultLogger.setMinLevel('error');  // 只记录错误
+DefaultLogger.enableBuffering();     // 启用高性能缓冲模式
+DefaultLogger.disableBuffering();    // 禁用缓冲,实时输出
 ```
 
-**✨ 新特性**: `DefaultLogger` 采用**懒加载 + 容错机制**，真正做到开箱即用：
-- ✅ 无需显式初始化，直接调用即可
-- ✅ 初始化失败自动降级到 console 输出
-- ✅ 支持随时动态配置
-- ✅ 全局单例，配置一次全局生效
+**✨ DefaultLogger 特性**：
+- ✅ **开箱即用**: 零配置,直接调用即可
+- ✅ **动态配置**: 运行时可随时调整级别、路径、缓冲等
+- ✅ **容错降级**: 初始化失败自动降级到 console 输出
+- ✅ **全局单例**: 配置一次,全局生效
+- ✅ **便捷 API**: 提供丰富的便捷方法,简化使用
 
-详细文档请参考：[DefaultLogger 使用指南](./docs/DefaultLogger_Usage.md)
+### 高级用法（多实例场景）
+
+适用于微服务、插件系统、复杂架构等需要独立日志器的场景：
+
+```typescript
+import { Logger } from 'koatty_logger';
+
+// 创建独立的日志器实例
+const auditLogger = new Logger({
+  logLevel: 'info',
+  logFilePath: './logs/audit.log',
+  buffer: {
+    enableBuffer: true,
+    maxBufferSize: 500,
+    flushInterval: 100
+  }
+});
+
+const userServiceLogger = new Logger({
+  logLevel: 'debug',
+  logFilePath: './logs/user-service.log',
+  sensFields: new Set(['password', 'ssn'])
+});
+
+auditLogger.info('审计日志', { action: 'login', userId: 123 });
+userServiceLogger.debug('用户服务日志');
+```
+
+**📖 使用建议**：
+- **大多数场景**: 使用 `DefaultLogger` (简单、便捷、统一)
+- **微服务架构**: 使用 `new Logger()` (隔离、独立、灵活)
+- **混合使用**: 主应用用 `DefaultLogger`,关键模块用独立 `Logger`
+
+详细示例请参考：
+- [DefaultLogger 综合示例](./examples/default_logger_comprehensive.ts)
+- [Logger 对比示例](./examples/logger_comparison.ts)
 
 ### 安全配置
 

@@ -17,6 +17,6 @@ export interface LogStats
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [buffer](./koatty_logger.logstats.buffer.md) |  | { bufferSize: number; totalLogs: number; droppedLogs: number; droppedRate: number; } |  |
-|  [minLevel](./koatty_logger.logstats.minlevel.md) |  | string |  |
+|  [minLevel](./koatty_logger.logstats.minlevel.md) |  | [LogLevelType](./koatty_logger.logleveltype.md) |  |
 |  [sampling?](./koatty_logger.logstats.sampling.md) |  | Map&lt;string, { sampleRate: number; counter: number; }&gt; | _(Optional)_ |
 

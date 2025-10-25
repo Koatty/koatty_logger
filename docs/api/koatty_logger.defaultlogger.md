@@ -4,12 +4,32 @@
 
 ## DefaultLogger variable
 
-DefaultLogger - 默认开启批量日志处理优化的增强日志器
+导出默认日志器单例
 
-默认配置： - 启用批量写入缓冲 - 缓冲区大小：100 条 - 刷新间隔：1000ms - error 级别立即刷新
+使用方式：
+
+```typescript
+import { DefaultLogger } from 'koatty_logger';
+
+// 直接使用（开箱即用）
+DefaultLogger.info('Application started');
+
+// 配置后使用
+DefaultLogger.configure({
+  minLevel: 'debug',
+  logFilePath: './logs/app.log',
+  sensFields: new Set(['password', 'token'])
+});
+DefaultLogger.debug('Debug info');
+
+// 或使用便捷方法
+DefaultLogger.setLogLevel('debug');
+DefaultLogger.setLogFilePath('./logs/app.log');
+DefaultLogger.setSensitiveFields(['password', 'token']);
+```
 
 **Signature:**
 
 ```typescript
-DefaultLogger: EnhancedLogger
+DefaultLogger: DefaultLoggerClass
 ```

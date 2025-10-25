@@ -15,6 +15,7 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
   },
+  ignorePatterns: ['examples/**/*', 'dist/**/*', 'node_modules/**/*', 'temp/**/*'],
   env: {
     node: true,
     mongo: true,

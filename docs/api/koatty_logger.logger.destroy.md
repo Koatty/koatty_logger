@@ -9,9 +9,9 @@ destroy - 销毁Logger实例，释放资源
 **Signature:**
 
 ```typescript
-destroy(): void;
+destroy(): Promise<void>;
 ```
 **Returns:**
 
-void
+Promise&lt;void&gt;
 

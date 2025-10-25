@@ -4,12 +4,12 @@
 
 ## createLogger() function
 
-创建日志器的工厂函数
+创建日志器的工厂函数 Logger 现在已整合所有增强功能，可根据配置自动启用
 
 **Signature:**
 
 ```typescript
-export declare function createLogger(config?: LoggerConfig): EnhancedLogger | Logger;
+export declare function createLogger(config?: LoggerConfig): Logger;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ export declare function createLogger(config?: LoggerConfig): EnhancedLogger | Lo
 
 **Returns:**
 
-[EnhancedLogger](./koatty_logger.enhancedlogger.md) \| [Logger](./koatty_logger.logger.md)
+[Logger](./koatty_logger.logger.md)
 

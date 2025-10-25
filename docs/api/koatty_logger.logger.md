@@ -26,28 +26,34 @@ export declare class Logger implements ILogger
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [clearSensFields()](./koatty_logger.logger.clearsensfields.md) |  | clearSensFields - 清理敏感字段，防止内存泄漏 |
+|  [configureBuffering(config)](./koatty_logger.logger.configurebuffering.md) |  | 配置缓冲功能 |
+|  [configureSampling(key, rate)](./koatty_logger.logger.configuresampling.md) |  | 配置采样功能 |
 |  [debug(args)](./koatty_logger.logger.debug.md) |  | debug |
 |  [Debug(args)](./koatty_logger.logger.debug.md) |  | log Debug |
+|  [DebugSampled(key, message, args)](./koatty_logger.logger.debugsampled.md) |  | 采样日志方法 - Debug |
 |  [destroy()](./koatty_logger.logger.destroy.md) |  | destroy - 销毁Logger实例，释放资源 |
 |  [enable(b)](./koatty_logger.logger.enable.md) |  | enable |
-|  [enableBatch(enabled)](./koatty_logger.logger.enablebatch.md) |  | enableBatch - 启用/禁用批量写入 |
 |  [error(args)](./koatty_logger.logger.error.md) |  | error |
 |  [Error(args)](./koatty_logger.logger.error.md) |  | log Error |
-|  [flushBatch()](./koatty_logger.logger.flushbatch.md) |  | flushBatch - 立即刷新批量写入缓冲区 |
-|  [getBatchConfig()](./koatty_logger.logger.getbatchconfig.md) |  | getBatchConfig - 获取批量写入配置 |
-|  [getBatchStatus()](./koatty_logger.logger.getbatchstatus.md) |  | getBatchStatus - 获取批量写入状态 |
+|  [ErrorSampled(key, message, args)](./koatty_logger.logger.errorsampled.md) |  | 采样日志方法 - Error |
+|  [flush()](./koatty_logger.logger.flush.md) |  | 手动刷新缓冲区 |
 |  [getLevel()](./koatty_logger.logger.getlevel.md) |  | getLevel |
 |  [getLogFilePath()](./koatty_logger.logger.getlogfilepath.md) |  | getLogFilePath |
+|  [getMinLevel()](./koatty_logger.logger.getminlevel.md) |  | 获取最小日志级别 |
 |  [getSensFields()](./koatty_logger.logger.getsensfields.md) |  | getSensFields |
+|  [getStats()](./koatty_logger.logger.getstats.md) |  | 获取统计信息 |
 |  [info(args)](./koatty_logger.logger.info.md) |  | info |
 |  [Info(args)](./koatty_logger.logger.info.md) |  | log Info |
+|  [InfoSampled(key, message, args)](./koatty_logger.logger.infosampled.md) |  | 采样日志方法 - Info |
 |  [log(name, args)](./koatty_logger.logger.log.md) |  | log |
 |  [Log(name, args)](./koatty_logger.logger.log.md) |  | <p>log Log</p><p>Logger.Log('msg')</p><p>Logger.Log('name', 'msg')</p><p>Logger.Log('name', 'msg1', 'msg2'...)</p> |
 |  [resetSensFields(fields)](./koatty_logger.logger.resetsensfields.md) |  | resetSensFields - 重置敏感字段为指定列表 |
-|  [setBatchConfig(config)](./koatty_logger.logger.setbatchconfig.md) |  | setBatchConfig - 设置批量写入配置 |
 |  [setLevel(level)](./koatty_logger.logger.setlevel.md) |  | setLevel |
 |  [setLogFilePath(f)](./koatty_logger.logger.setlogfilepath.md) |  | setLogFile |
+|  [setMinLevel(level)](./koatty_logger.logger.setminlevel.md) |  | 设置最小日志级别（用于过滤） |
 |  [setSensFields(fields)](./koatty_logger.logger.setsensfields.md) |  | setSensFields |
+|  [stop()](./koatty_logger.logger.stop.md) |  | 停止日志器，刷新所有待写入的日志 |
 |  [warn(args)](./koatty_logger.logger.warn.md) |  | warn |
 |  [Warn(args)](./koatty_logger.logger.warn.md) |  | log Warn |
+|  [WarnSampled(key, message, args)](./koatty_logger.logger.warnsampled.md) |  | 采样日志方法 - Warn |
 

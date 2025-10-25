@@ -31,10 +31,17 @@ npm install koatty_logger
 ```typescript
 import { DefaultLogger } from 'koatty_logger';
 
-// 使用默认日志器（已开启批量写入优化）
+// 🎉 开箱即用 - 无需任何配置或初始化
 DefaultLogger.info('应用启动成功');
 DefaultLogger.error('发生错误', new Error('示例错误'));
 DefaultLogger.debug('调试信息', { userId: 123, action: 'login' });
+
+// 💡 可选：在使用前配置（推荐）
+DefaultLogger.configure({
+  minLevel: 'info',
+  logFilePath: './logs/app.log',
+  sensFields: new Set(['password', 'token'])
+});
 
 // 或创建自定义logger实例
 import { Logger } from 'koatty_logger';
@@ -42,7 +49,13 @@ const logger = new Logger();
 logger.info('自定义日志器');
 ```
 
-**注意**: `DefaultLogger` 现在默认使用 `EnhancedLogger`，并开启了批量写入优化，具有更好的性能表现。
+**✨ 新特性**: `DefaultLogger` 采用**懒加载 + 容错机制**，真正做到开箱即用：
+- ✅ 无需显式初始化，直接调用即可
+- ✅ 初始化失败自动降级到 console 输出
+- ✅ 支持随时动态配置
+- ✅ 全局单例，配置一次全局生效
+
+详细文档请参考：[DefaultLogger 使用指南](./docs/DefaultLogger_Usage.md)
 
 ### 安全配置
 
@@ -78,14 +91,14 @@ const asyncLogger = new Logger({
   // 默认不启用批量写入，使用异步单条写入
 });
 
-const batchLogger = new Logger({
+const bufferedLogger = new Logger({
   logLevel: 'info', 
-  logFilePath: './logs/batch.log',
-  batchConfig: {
-    enabled: true,        // 启用批量写入
-    maxSize: 100,         // 缓冲区最大100条日志
+  logFilePath: './logs/buffered.log',
+  buffer: {
+    enableBuffer: true,   // 启用缓冲
+    maxBufferSize: 100,   // 缓冲区最大100条日志
     flushInterval: 1000,  // 每秒检查一次是否需要刷新
-    maxWaitTime: 5000     // 最多等待5秒就强制刷新
+    flushOnLevel: 'error' // error级别立即刷新
   }
 });
 
@@ -102,38 +115,39 @@ try {
   console.error('路径不安全:', error.message);
 }
 
-// 高性能批量写入配置
+// 高性能缓冲配置
 const highPerfLogger = new Logger({
   logLevel: 'info',
   logFilePath: './logs/high-perf.log',
-  batchConfig: {
-    enabled: true,        // 启用批量写入
-    maxSize: 100,         // 缓冲区最大100条日志
+  buffer: {
+    enableBuffer: true,   // 启用缓冲
+    maxBufferSize: 100,   // 缓冲区最大100条日志
     flushInterval: 1000,  // 每秒检查一次是否需要刷新
-    maxWaitTime: 5000     // 最多等待5秒就强制刷新
+    flushOnLevel: 'error' // error级别立即刷新
   }
 });
 
-// 批量写入控制
-highPerfLogger.enableBatch(true);   // 启用批量写入
-await highPerfLogger.flushBatch();  // 立即异步刷新缓冲区
+// 缓冲控制
+await highPerfLogger.flush();  // 立即异步刷新缓冲区
 
-// 获取批量写入状态
-const status = highPerfLogger.getBatchStatus();
-console.log('缓冲区大小:', status.bufferSize);
-console.log('距离上次刷新时间:', status.timeSinceLastFlush);
+// 获取统计信息
+const stats = highPerfLogger.getStats();
+if (stats) {
+  console.log('缓冲区大小:', stats.buffer.bufferSize);
+  console.log('总日志数:', stats.buffer.totalLogs);
+}
 
-// 动态调整批量写入配置
-highPerfLogger.setBatchConfig({
-  maxSize: 200,         // 调整缓冲区大小
+// 动态调整缓冲配置
+highPerfLogger.configureBuffering({
+  maxBufferSize: 200,   // 调整缓冲区大小
   flushInterval: 500    // 调整检查间隔
 });
 
 // 优雅关闭（确保所有日志都被写入）
 process.on('SIGINT', async () => {
   console.log('正在关闭应用...');
-  await highPerfLogger.flushBatch(); // 等待所有日志写入完成
-  logger.destroy();      // 释放所有资源
+  await highPerfLogger.flush(); // 等待所有日志写入完成
+  await highPerfLogger.destroy(); // 释放所有资源
   process.exit(0);
 });
 
@@ -161,10 +175,11 @@ new Logger(options?: LoggerOpt)
 | `setLogFilePath(path)` | 设置日志文件路径 | 路径遍历防护 |
 | `setSensFields(fields)` | 设置敏感字段 | 数据脱敏 |
 | `clearSensFields()` | 清空敏感字段 | 内存清理 |
-| `enableBatch(enabled)` | 启用/禁用批量写入 | 高并发性能优化 |
-| `setBatchConfig(config)` | 设置批量写入配置 | 动态性能调优 |
-| `flushBatch()` | 立即刷新缓冲区 | 异步操作，返回Promise |
-| `getBatchStatus()` | 获取批量写入状态 | 性能监控 |
+| `configureBuffering(config)` | 配置缓冲功能 | 高并发性能优化 |
+| `configureSampling(key, rate)` | 配置采样率 | 减少高频日志 |
+| `setMinLevel(level)` | 设置最小日志级别 | 动态级别过滤 |
+| `getStats()` | 获取统计信息 | 监控日志状态 |
+| `flush()` | 立即刷新缓冲区 | 异步操作，返回Promise |
 | `destroy()` | 销毁实例 | 资源释放，异步刷新剩余日志 |
 
 ### 配置选项
@@ -174,7 +189,10 @@ interface LoggerOpt {
   logLevel?: 'debug' | 'info' | 'warning' | 'error';
   logFilePath?: string;  // 安全验证的日志路径
   sensFields?: Set<string>;  // 敏感字段集合
-  batchConfig?: BatchConfig;  // 批量写入配置
+  // 增强功能配置
+  buffer?: BufferConfig;  // 缓冲配置
+  sampling?: SamplingConfig;  // 采样配置
+  minLevel?: LogLevelType;  // 最小日志级别
 }
 
 interface BatchConfig {
@@ -240,42 +258,50 @@ const highConcurrencyLogger = new Logger({
 });
 
 // ✅ 推荐：关键操作后手动刷新批量日志
-await logger.flushBatch(); // 确保重要日志立即写入
+await logger.flush(); // 确保重要日志立即写入
 
 // ✅ 推荐：优雅关闭，等待所有日志写入完成
 process.on('SIGTERM', async () => {
   console.log('接收到关闭信号，正在刷新日志...');
-  await logger.flushBatch();
+  await logger.flush();
   logger.destroy();
   process.exit(0);
 });
 
 // ⚠️ 注意：批量模式的权衡
-// 批量写入：更高性能，但可能延迟写入
-// 异步单条：实时性更好，适合错误日志
-logger.enableBatch(false); // 关键错误日志立即写入
-logger.error('Critical system error');
-logger.enableBatch(true);  // 重新启用批量写入
+// 缓冲模式：更高性能，但可能延迟写入
+// 配置 flushOnLevel 可以让关键日志立即写入
+const logger = new Logger({
+  buffer: {
+    enableBuffer: true,
+    flushOnLevel: 'error'  // error 级别立即刷新
+  }
+});
+logger.error('Critical system error'); // 立即刷新
 ```
 
 ### 5. 批量写入最佳实践
 ```typescript
 // ✅ 推荐：应用关闭前手动刷新
 process.on('SIGINT', async () => {
-  await logger.flushBatch();
+  await logger.flush();
   logger.destroy();
   process.exit(0);
 });
 
-// ⚠️ 注意：实时性要求高的日志禁用批量写入
-logger.enableBatch(false); // 错误日志等需要立即写入
-logger.error('Critical error occurred');
-logger.enableBatch(true);  // 重新启用批量写入
+// ⚠️ 注意：实时性要求高的日志可配置立即刷新
+const logger = new Logger({
+  buffer: {
+    enableBuffer: true,
+    flushOnLevel: 'error'  // error 和 warning 立即刷新
+  }
+});
+logger.error('Critical error occurred'); // 立即写入
 ```
 
-## 🚀 增强功能 (EnhancedLogger)
+## 🚀 增强功能
 
-`koatty_logger` 现在提供增强版日志器 `EnhancedLogger`，支持更多高级特性：
+`koatty_logger` 的 `Logger` 类已整合所有增强功能，无需单独使用 EnhancedLogger：
 
 ### 特性概览
 
@@ -284,10 +310,10 @@ logger.enableBatch(true);  // 重新启用批量写入
 - **级别过滤**: 运行时动态调整日志级别，灵活控制输出
 - **统计监控**: 实时统计日志处理情况，便于性能分析
 
-### 使用增强日志器
+### 使用增强功能
 
 ```typescript
-import { createLogger, EnhancedLogger } from 'koatty_logger';
+import { createLogger, Logger } from 'koatty_logger';
 
 // 方式1: 使用工厂函数（推荐）
 const logger = createLogger({
@@ -307,9 +333,9 @@ const logger = createLogger({
 });
 
 // 方式2: 直接实例化
-const enhancedLogger = new EnhancedLogger({
+const enhancedLogger = new Logger({
   minLevel: 'debug',
-  logFilePath: './logs/enhanced.log',
+  logFilePath: './logs/app.log',
   buffer: {
     enableBuffer: true,
     maxBufferSize: 200,

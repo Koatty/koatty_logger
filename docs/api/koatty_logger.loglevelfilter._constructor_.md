@@ -9,12 +9,12 @@ Constructs a new instance of the `LogLevelFilter` class
 **Signature:**
 
 ```typescript
-constructor(minLevel?: 'debug' | 'info' | 'warn' | 'error');
+constructor(minLevel?: LogLevelType);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  minLevel | 'debug' \| 'info' \| 'warn' \| 'error' | _(Optional)_ |
+|  minLevel | [LogLevelType](./koatty_logger.logleveltype.md) | _(Optional)_ |
 

@@ -9,9 +9,9 @@
 **Signature:**
 
 ```typescript
-getMinLevel(): string;
+getMinLevel(): LogLevelType;
 ```
 **Returns:**
 
-string
+[LogLevelType](./koatty_logger.logleveltype.md)
 

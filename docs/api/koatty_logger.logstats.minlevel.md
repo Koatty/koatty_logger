@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-minLevel: string;
+minLevel: LogLevelType;
 ```

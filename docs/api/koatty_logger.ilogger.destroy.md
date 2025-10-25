@@ -9,9 +9,9 @@ Destroy logger instance and release resources
 **Signature:**
 
 ```typescript
-destroy(): void;
+destroy(): Promise<void>;
 ```
 **Returns:**
 
-void
+Promise&lt;void&gt;
 

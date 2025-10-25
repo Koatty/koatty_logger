@@ -9,14 +9,14 @@
 **Signature:**
 
 ```typescript
-shouldLog(level: 'debug' | 'info' | 'warn' | 'error'): boolean;
+shouldLog(level: LogLevelType): boolean;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  level | 'debug' \| 'info' \| 'warn' \| 'error' |  |
+|  level | [LogLevelType](./koatty_logger.logleveltype.md) |  |
 
 **Returns:**
 

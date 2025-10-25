@@ -14,8 +14,10 @@ export interface LoggerOpt
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [batchConfig?](./koatty_logger.loggeropt.batchconfig.md) |  | [BatchConfig](./koatty_logger.batchconfig.md) | _(Optional)_ |
+|  [buffer?](./koatty_logger.loggeropt.buffer.md) |  | import('./types').[BufferConfig](./koatty_logger.bufferconfig.md) | _(Optional)_ 缓冲配置 |
 |  [logFilePath?](./koatty_logger.loggeropt.logfilepath.md) |  | string | _(Optional)_ |
 |  [logLevel?](./koatty_logger.loggeropt.loglevel.md) |  | [LogLevelType](./koatty_logger.logleveltype.md) | _(Optional)_ |
+|  [minLevel?](./koatty_logger.loggeropt.minlevel.md) |  | [LogLevelType](./koatty_logger.logleveltype.md) | _(Optional)_ 最小日志级别 - 用于级别过滤 |
+|  [sampling?](./koatty_logger.loggeropt.sampling.md) |  | import('./types').[SamplingConfig](./koatty_logger.samplingconfig.md) | _(Optional)_ 采样配置 |
 |  [sensFields?](./koatty_logger.loggeropt.sensfields.md) |  | Set&lt;string&gt; | _(Optional)_ |
 

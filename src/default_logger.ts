@@ -22,12 +22,15 @@ import { LogLevelType, ILogger } from './interface';
 class DefaultLoggerClass implements ILogger {
   private _instance: Logger | null = null;
   private _config: LoggerConfig = {
+    // 默认不启用缓冲,确保开箱即用时日志立即输出
+    // 用户可以通过 configure() 方法启用缓冲以获得更好的性能
     buffer: {
-      enableBuffer: true,
+      enableBuffer: false,  // 开箱即用:立即输出,无延迟
       maxBufferSize: 100,
       flushInterval: 1000,
       flushOnLevel: 'error'
-    }
+    },
+    minLevel: 'info'  // 默认日志级别
   };
   private _initialized = false;
   private _initFailed = false;
@@ -101,6 +104,7 @@ class DefaultLoggerClass implements ILogger {
    * 可以在实例化前或实例化后调用
    * 
    * @param config - 日志器配置
+   * @param hotReload - 是否热更新(不重新创建实例),默认 true
    * @example
    * ```typescript
    * // 在使用前配置
@@ -109,11 +113,22 @@ class DefaultLoggerClass implements ILogger {
    *   logFilePath: './logs/app.log'
    * });
    * 
-   * // 之后直接使用
-   * DefaultLogger.info('Application started');
+   * // 运行时动态调整
+   * DefaultLogger.configure({
+   *   minLevel: 'error'  // 只记录错误日志
+   * });
+   * 
+   * // 启用高性能缓冲模式
+   * DefaultLogger.configure({
+   *   buffer: {
+   *     enableBuffer: true,
+   *     maxBufferSize: 200,
+   *     flushInterval: 500
+   *   }
+   * });
    * ```
    */
-  configure(config: Partial<LoggerConfig>): void {
+  configure(config: Partial<LoggerConfig>, hotReload: boolean = true): void {
     // 合并配置
     this._config = {
       ...this._config,
@@ -124,18 +139,44 @@ class DefaultLoggerClass implements ILogger {
       }
     };
 
-    // 如果已经初始化，需要重新创建实例
+    // 如果已经初始化，支持热更新或重新创建
     if (this._initialized && this._instance && !this._initFailed) {
       try {
-        // 先销毁旧实例
-        if ('destroy' in this._instance && typeof this._instance.destroy === 'function') {
-          this._instance.destroy();
+        if (hotReload) {
+          // 热更新模式:直接更新现有实例的配置
+          if (config.minLevel !== undefined && 'setMinLevel' in this._instance) {
+            this._instance.setMinLevel(config.minLevel);
+          }
+          if (config.logLevel !== undefined && 'setLevel' in this._instance) {
+            this._instance.setLevel(config.logLevel);
+          }
+          if (config.logFilePath !== undefined && 'setLogFilePath' in this._instance) {
+            this._instance.setLogFilePath(config.logFilePath);
+          }
+          if (config.sensFields !== undefined && 'resetSensFields' in this._instance) {
+            this._instance.resetSensFields(Array.from(config.sensFields));
+          }
+          if (config.buffer !== undefined && 'configureBuffering' in this._instance) {
+            this._instance.configureBuffering(config.buffer);
+          }
+          if (config.sampling !== undefined && 'configureSampling' in this._instance) {
+            // 配置采样率
+            if (config.sampling.sampleRates) {
+              config.sampling.sampleRates.forEach((rate, key) => {
+                this._instance!.configureSampling(key, rate);
+              });
+            }
+          }
+        } else {
+          // 完全重新创建实例
+          if ('destroy' in this._instance && typeof this._instance.destroy === 'function') {
+            this._instance.destroy();
+          }
+          
+          this._initialized = false;
+          this._instance = null;
+          this.getInstance();
         }
-        
-        // 重新创建
-        this._initialized = false;
-        this._instance = null;
-        this.getInstance();
       } catch (error) {
         console.error('[DefaultLogger] Failed to reconfigure:', error);
       }
@@ -183,8 +224,49 @@ class DefaultLoggerClass implements ILogger {
   setSensitiveFields(fields: string[]): void {
     this.configure({ sensFields: new Set(fields) });
     // 如果实例已存在，同步更新
-    if (this._instance && 'setSensFields' in this._instance) {
-      this._instance.setSensFields(fields);
+    if (this._instance && 'resetSensFields' in this._instance) {
+      this._instance.resetSensFields(fields);
+    }
+  }
+
+  /**
+   * 启用缓冲模式 - 高性能场景
+   * @param config - 缓冲配置,可选
+   */
+  enableBuffering(config?: { maxBufferSize?: number; flushInterval?: number; flushOnLevel?: 'error' | 'warn' | 'info' | 'debug' }): void {
+    const bufferConfig = {
+      enableBuffer: true,
+      maxBufferSize: config?.maxBufferSize ?? 100,
+      flushInterval: config?.flushInterval ?? 1000,
+      flushOnLevel: config?.flushOnLevel ?? ('error' as const)
+    };
+    this.configure({ buffer: bufferConfig });
+  }
+
+  /**
+   * 禁用缓冲模式 - 实时输出
+   */
+  disableBuffering(): void {
+    this.configure({ buffer: { enableBuffer: false } });
+  }
+
+  /**
+   * 设置采样率
+   * @param key - 采样键
+   * @param rate - 采样率 (0-1)
+   */
+  setSamplingRate(key: string, rate: number): void {
+    if (this._instance && 'configureSampling' in this._instance) {
+      this._instance.configureSampling(key, rate);
+    } else {
+      // 保存到配置中,等待实例创建
+      if (!this._config.sampling) {
+        this._config.sampling = { sampleRates: new Map() };
+      }
+      if (!this._config.sampling.sampleRates) {
+        this._config.sampling.sampleRates = new Map();
+      }
+      this._config.sampling.sampleRates.set(key, rate);
     }
   }
 
@@ -396,25 +478,66 @@ class DefaultLoggerClass implements ILogger {
 /**
  * 导出默认日志器单例
  * 
- * 使用方式：
+ * ## 特性
+ * - ✅ **开箱即用**: 无需配置,直接调用即可
+ * - ✅ **动态配置**: 运行时可随时调整日志级别、路径、缓冲等
+ * - ✅ **容错降级**: 初始化失败自动降级到 console 输出
+ * - ✅ **全局单例**: 配置一次,全局生效
+ * 
+ * ## 基础使用（开箱即用）
  * ```typescript
  * import { DefaultLogger } from 'koatty_logger';
  * 
- * // 直接使用（开箱即用）
+ * // 直接使用 - 无需任何配置
  * DefaultLogger.info('Application started');
+ * DefaultLogger.error('Something went wrong', error);
+ * DefaultLogger.debug('Debug info', { userId: 123 });
+ * ```
  * 
- * // 配置后使用
+ * ## 配置使用
+ * ```typescript
+ * // 方式1: 使用 configure() 方法
  * DefaultLogger.configure({
  *   minLevel: 'debug',
  *   logFilePath: './logs/app.log',
  *   sensFields: new Set(['password', 'token'])
  * });
- * DefaultLogger.debug('Debug info');
  * 
- * // 或使用便捷方法
- * DefaultLogger.setLogLevel('debug');
- * DefaultLogger.setLogFilePath('./logs/app.log');
+ * // 方式2: 使用便捷方法
+ * DefaultLogger.setMinLevel('debug');
+ * DefaultLogger.setLogPath('./logs/app.log');
  * DefaultLogger.setSensitiveFields(['password', 'token']);
+ * ```
+ * 
+ * ## 动态调整
+ * ```typescript
+ * // 运行时动态调整日志级别
+ * DefaultLogger.setMinLevel('error');  // 只记录错误
+ * 
+ * // 动态启用高性能缓冲模式
+ * DefaultLogger.enableBuffering({
+ *   maxBufferSize: 200,
+ *   flushInterval: 500
+ * });
+ * 
+ * // 动态禁用缓冲,实时输出
+ * DefaultLogger.disableBuffering();
+ * 
+ * // 设置采样率
+ * DefaultLogger.setSamplingRate('api-request', 0.1);
+ * ```
+ * 
+ * ## 高级用法
+ * 如果需要更精细的控制,请使用 `new Logger()`:
+ * ```typescript
+ * import { Logger } from 'koatty_logger';
+ * 
+ * const customLogger = new Logger({
+ *   logLevel: 'debug',
+ *   logFilePath: './logs/custom.log',
+ *   buffer: { enableBuffer: true, maxBufferSize: 500 },
+ *   sampling: { sampleRates: new Map([['high-freq', 0.01]]) }
+ * });
  * ```
  */
 export const DefaultLogger = new DefaultLoggerClass();

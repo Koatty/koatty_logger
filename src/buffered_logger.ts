@@ -96,6 +96,14 @@ private shouldFlushImmediately(level: string): boolean {
       const entriesToFlush = this.buffer.splice(0);
       if (this.flushCallback) {
         this.flushCallback(entriesToFlush);
+      } else {
+        // 降级方案: 当没有回调时,直接输出到console
+        entriesToFlush.forEach(entry => {
+          const levelMethod = entry.level === 'error' ? 'error' : 
+                             entry.level === 'warning' ? 'warn' : 
+                             'log';
+          console[levelMethod](`[${entry.level.toUpperCase()}]`, ...entry.args);
+        });
       }
     } finally {
       this.isFlushing = false;
@@ -108,6 +116,14 @@ private shouldFlushImmediately(level: string): boolean {
   private flushImmediately(entries: LogEntry[]): void {
     if (this.flushCallback) {
       this.flushCallback(entries);
+    } else {
+      // 降级方案: 当没有回调时,直接输出到console
+      entries.forEach(entry => {
+        const levelMethod = entry.level === 'error' ? 'error' : 
+                           entry.level === 'warning' ? 'warn' : 
+                           'log';
+        console[levelMethod](`[${entry.level.toUpperCase()}]`, ...entry.args);
+      });
     }
   }
 

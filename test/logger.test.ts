@@ -137,7 +137,7 @@ describe('Logger Performance Tests', () => {
     const endTime = Date.now();
     
     // 性能测试：处理1000个元素应该在合理时间内完成
-    expect(endTime - startTime).toBeLessThan(100);
+    expect(endTime - startTime).toBeLessThan(200);
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1000);
   });

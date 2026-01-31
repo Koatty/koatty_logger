@@ -95,6 +95,17 @@ log Error
 </td></tr>
 <tr><td>
 
+[Fatal(args)](./koatty_logger.ilogger.fatal.md)
+
+
+</td><td>
+
+log Fatal - for critical errors that cause application termination Automatically exits the process after logging
+
+
+</td></tr>
+<tr><td>
+
 [flushBatch()](./koatty_logger.ilogger.flushbatch.md)
 
 

@@ -36,8 +36,13 @@ const logger = new Logger();
 
 // 基础日志输出
 logger.info('应用启动成功');
+// 输出 [2022-11-18 16:04:00.011] [INFO] 应用启动成功
 logger.error('发生错误', new Error('示例错误'));
+// 输出 [2022-11-18 16:04:00.011] [ERROR] 发生错误: Error: 示例错误
 logger.debug('调试信息', { userId: 123, action: 'login' });
+// 输出 [2022-11-18 16:04:00.011] [DEBUG] 调试信息: { userId: 123, action: 'login' }
+logger.Log('Koatty', '', 'LoadAllComponents completed');
+// 输出 [2022-11-18 16:04:00.011] [KOATTY] LoadAllComponents completed
 ```
 
 ### 安全配置

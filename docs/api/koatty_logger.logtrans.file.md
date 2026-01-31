@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-File?: transports.FileTransportInstance;
+File?: any;
 ```

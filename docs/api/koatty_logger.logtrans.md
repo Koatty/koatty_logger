@@ -62,7 +62,7 @@ _(Optional)_
 
 </td><td>
 
-transports.FileTransportInstance
+any
 
 
 </td><td>

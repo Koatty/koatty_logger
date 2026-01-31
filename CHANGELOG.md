@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0
+
+### Minor Changes
+
+- build
+
 ## 2.3.4
 
 ### Patch Changes

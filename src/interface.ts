@@ -14,7 +14,8 @@ export type LogLevelType = "debug" | "info" | "warning" | "error";
 // LogTrans
 export interface LogTrans {
   Console?: transports.ConsoleTransportInstance;
-  File?: transports.FileTransportInstance;
+  // DailyRotateFile 类型与 FileTransportInstance 不完全兼容
+  File?: any;
 }
 
 // 批量写入配置
@@ -72,6 +73,15 @@ export interface ILogger {
    * @memberof Logger
    */
   Error(...args: any[]): void;
+
+  /**
+   * log Fatal - for critical errors that cause application termination
+   * Automatically exits the process after logging
+   * 
+   * @returns {void} 
+   * @memberof Logger
+   */
+  Fatal(...args: any[]): void;
 
   /**
    * log Custom

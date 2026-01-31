@@ -9,10 +9,10 @@
 import * as helper from "koatty_lib";
 import util from "util";
 import { createLogger, format, transports, Logger as wLogger } from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 import { BatchConfig, ILogger, LogEntry, LogLevelType, LogTrans } from "./interface";
 import { ShieldLog } from "./shield";
 import path from "path";
-const DailyRotateFile = helper.safeRequire("winston-daily-rotate-file");
 const { combine, timestamp, printf } = format;
 
 const LogLevelObj: any = {
@@ -494,6 +494,39 @@ export class Logger implements ILogger {
    */
   public error(...args: any[]) {
     return this.printLog("error", "", args);
+  }
+
+  /**
+   * log Fatal - for critical errors that cause application termination
+   * Automatically exits the process after logging
+   * 
+   * @returns {*} 
+   * @memberof Logger
+   */
+  public Fatal(...args: any[]) {
+    // Flush any buffered logs first
+    if (this.batchConfig.enabled) {
+      this.flushBatch().catch(() => {}); // Don't wait, just try to flush
+    }
+    // Print to console.error directly to ensure visibility
+    console.error('\x1b[31m[FATAL]\x1b[0m', ...args);
+    this.printLog("error", "FATAL", args);
+    // Give a tiny delay for logs to be written
+    setImmediate(() => process.exit(1));
+  }
+  /**
+   * fatal
+   */
+  public fatal(...args: any[]) {
+    // Flush any buffered logs first
+    if (this.batchConfig.enabled) {
+      this.flushBatch().catch(() => {}); // Don't wait, just try to flush
+    }
+    // Print to console.error directly to ensure visibility
+    console.error('\x1b[31m[FATAL]\x1b[0m', ...args);
+    this.printLog("error", "FATAL", args);
+    // Give a tiny delay for logs to be written
+    setImmediate(() => process.exit(1));
   }
 
   /**

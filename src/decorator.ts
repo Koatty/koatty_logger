@@ -101,7 +101,7 @@ export function registerLogDecorator(propertyManager: IPropertyDecoratorManagerL
   try {
     propertyManager.registerWrapper(LOG_DECORATOR_TYPE, logPropertyWrapper);
     storedPropertyManager = propertyManager;
-  } catch (_e) {
+  } catch {
     // Avoid breaking app if container API differs
   }
 }
@@ -146,7 +146,7 @@ export function Log(options?: LoggerOpt): PropertyDecorator {
         wrapperTypes: [LOG_DECORATOR_TYPE],
         config: options
       });
-    } catch (_e) {
+    } catch {
       return;
     }
   };

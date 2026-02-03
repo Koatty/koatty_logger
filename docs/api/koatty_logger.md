@@ -32,6 +32,56 @@ Logger
 </td></tr>
 </tbody></table>
 
+## Functions
+
+<table><thead><tr><th>
+
+Function
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[Log(options)](./koatty_logger.log.md)
+
+
+</td><td>
+
+Property decorator: inject a logger instance. - @<!-- -->Log() uses the global DefaultLogger. - @<!-- -->Log(options) uses a dedicated Logger instance with the given options (cached per class+property).
+
+Requires registerLogDecorator(decoratorManager.property) to be called first; otherwise the decorator is a no-op so existing code is not broken.
+
+
+</td></tr>
+<tr><td>
+
+[registerLogDecorator(propertyManager)](./koatty_logger.registerlogdecorator.md)
+
+
+</td><td>
+
+Register the "Log" decorator with koatty-container's property manager. Call once at app startup, e.g. registerLogDecorator(decoratorManager.property).
+
+
+</td></tr>
+<tr><td>
+
+[unregisterLogDecorator()](./koatty_logger.unregisterlogdecorator.md)
+
+
+</td><td>
+
+Unregister the stored property manager (e.g. for tests).
+
+
+</td></tr>
+</tbody></table>
+
 ## Interfaces
 
 <table><thead><tr><th>
@@ -64,6 +114,17 @@ Description
 Logger interface
 
   ILogger
+
+
+</td></tr>
+<tr><td>
+
+[IPropertyDecoratorManagerLike](./koatty_logger.ipropertydecoratormanagerlike.md)
+
+
+</td><td>
+
+Minimal interface for property decorator manager (avoids depending on koatty\_container). Pass decoratorManager.property from koatty\_container when calling registerLogDecorator.
 
 
 </td></tr>

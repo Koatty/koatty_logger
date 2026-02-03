@@ -142,6 +142,65 @@ process.on('SIGINT', async () => {
 logger.destroy();  // 释放所有资源
 ```
 
+### Log 装饰器（与 koatty-container 集成）
+
+通过 `@Log()` 属性装饰器注入日志实例，适用于 Controller、Service 等类。需配合 [koatty_container](https://github.com/koatty/koatty_container) 使用，容器会在初始化时自动注册 `"Log"` 装饰器。
+
+**使用前**：应用若使用 koatty_container，`PropertyDecoratorManager` 首次创建时会自动注册；若未使用容器，可手动调用一次：
+
+```typescript
+import { registerLogDecorator } from 'koatty_logger';
+import { decoratorManager } from 'koatty_container';
+
+registerLogDecorator(decoratorManager.property);
+```
+
+**注入全局 DefaultLogger（推荐）**：
+
+```typescript
+import { Controller, GetMapping, QueryParam } from 'koatty_router';  // 或你的路由包
+import { Log } from 'koatty_logger';
+
+@Controller('/api/users')
+export class UserController {
+  app: App;
+  ctx: any;
+
+  @Log()
+  logger: any;
+
+  @GetMapping('/')
+  async getUsers(
+    @QueryParam('page') page: number = 1,
+    @QueryParam('limit') limit: number = 10
+  ): Promise<any> {
+    this.logger.info(`获取用户列表: page=${page}, limit=${limit}`);
+    const result = await this.userService.findAll(page, limit);
+    return { code: 200, message: '获取成功', data: result };
+  }
+}
+```
+
+**注入自定义 Logger 实例**：
+
+```typescript
+import { Log } from 'koatty_logger';
+
+class MyService {
+  @Log() logger: any;  // 全局 DefaultLogger
+
+  @Log({ logLevel: 'debug', logFilePath: './logs/service.log' })
+  debugLogger: any;  // 独立 Logger 实例，按类+属性缓存
+}
+```
+
+| 用法 | 说明 |
+|------|------|
+| `@Log()` | 属性赋值为全局 `DefaultLogger` 单例 |
+| `@Log(options)` | 属性赋值为 `new Logger(options)` 的实例，同一类+属性共享同一实例 |
+
+**说明**：未使用 koatty_container 时，`@Log()` 会静默不生效，不会影响现有代码。
+
 ## 🔧 API 文档
 
 ### Logger 类
@@ -185,6 +244,14 @@ interface BatchConfig {
   maxWaitTime?: number;     // 最大等待时间（毫秒）
 }
 ```
+
+### Log 装饰器 API
+
+| 导出 | 描述 |
+|------|------|
+| `Log(options?: LoggerOpt)` | 属性装饰器。无参时注入 `DefaultLogger`，有参时注入 `new Logger(options)` 的缓存实例 |
+| `registerLogDecorator(propertyManager)` | 向 koatty_container 的 property 管理器注册 `"Log"` 装饰器，通常由容器自动调用 |
+| `unregisterLogDecorator()` | 清除已注册的 property 管理器（多用于测试） |
 
 ## 🛡️ 安全最佳实践
 

@@ -690,3 +690,16 @@ export class Logger implements ILogger {
 
 }
 
+let defaultLoggerInstance: Logger | null = null;
+
+/**
+ * Get the default logger singleton (used by @Log() decorator to avoid circular dependency).
+ * @internal
+ */
+export function getDefaultLogger(): Logger {
+  if (!defaultLoggerInstance) {
+    defaultLoggerInstance = new Logger();
+  }
+  return defaultLoggerInstance;
+}
+

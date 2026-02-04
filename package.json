@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thinkkoa/koatty_logger.git"
+    "url": "git+https://github.com/koatty/koatty_logger.git"
   },
   "keywords": [
     "web",
@@ -34,7 +34,7 @@
     "restful",
     "agile",
     "koatty_logger",
-    "thinkkoa"
+    "koatty"
   ],
   "engines": {
     "node": ">10.0.0"
@@ -45,9 +45,9 @@
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/thinkkoa/koatty_logger/issues"
+    "url": "https://github.com/koatty/koatty_logger/issues"
   },
-  "homepage": "https://github.com/thinkkoa/koatty_logger",
+  "homepage": "https://github.com/koatty/koatty_logger",
   "maintainers": [
     {
       "name": "richenlin",

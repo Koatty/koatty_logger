@@ -1,6 +1,6 @@
 {
   "name": "koatty_logger",
-  "version": "2.8.2",
+  "version": "2.8.3",
   "description": "Logger for koatty.",
   "scripts": {
     "build": "pnpm run build:js && pnpm run build:dts && pnpm run build:doc && pnpm run build:cp",
@@ -78,7 +78,7 @@
     "winston-daily-rotate-file": "^4.7.1"
   },
   "peerDependencies": {
-    "koatty_lib": "^1.4.6",
+    "koatty_lib": "^1.4.7",
     "tslib": "^2.x.x"
   },
   "types": "./dist/index.d.ts"

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.8.3
+
+### Patch Changes
+
+- build
+- Updated dependencies
+  - koatty_lib@1.4.7
+
 ## 2.8.2
 
 ### Patch Changes

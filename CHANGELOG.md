@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.8.2
+
+### Patch Changes
+
+- build
+
 ## 2.4.2
 
 ### Patch Changes

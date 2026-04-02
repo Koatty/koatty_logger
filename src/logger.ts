@@ -18,7 +18,7 @@ const { combine, timestamp, printf } = format;
 const LogLevelObj: any = {
   "debug": 7,
   "info": 6,
-  "warning": 4,
+  "warn": 4,
   "error": 3
 };
 export interface LoggerOpt {
@@ -470,14 +470,14 @@ export class Logger implements ILogger {
    * @memberof Logger
    */
   public Warn(...args: any[]) {
-    return this.printLog("warning", "", args);
+    return this.printLog("warn", "", args);
   }
 
   /**
    * warn
    */
   public warn(...args: any[]) {
-    return this.printLog("warning", "", args);
+    return this.printLog("warn", "", args);
   }
 
   /**
@@ -545,7 +545,7 @@ export class Logger implements ILogger {
   public Log(name: LogLevelType | string, ...args: any[]) {
     // tslint:disable-next-line: one-variable-per-declaration
     let level = "info";
-    if (LogLevelObj[name]) {
+    if (LogLevelObj[name] !== undefined) {
       level = name;
       name = "";
     }
@@ -557,7 +557,7 @@ export class Logger implements ILogger {
    */
   public log(name: LogLevelType | string, ...args: any[]) {
     let level = "info";
-    if (LogLevelObj[name]) {
+    if (LogLevelObj[name] !== undefined) {
       level = name;
       name = "";
     }

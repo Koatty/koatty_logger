@@ -91,7 +91,7 @@ export class Logger implements ILogger {
    */
   constructor(opt?: LoggerOpt) {
     const level = (process.env.LOGS_LEVEL || "").toLowerCase();
-    if (level && LogLevelObj[level]) {
+    if (level && LogLevelObj[level] !== undefined) {
       this.logLevel = <LogLevelType>level;
     }
 

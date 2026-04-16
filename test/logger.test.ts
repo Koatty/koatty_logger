@@ -30,18 +30,23 @@ describe('Logger Security Tests', () => {
   });
 
   test('should prevent path traversal attacks', () => {
-    // 测试路径遍历攻击防护
     expect(() => {
       logger.setLogFilePath('../../../etc/passwd');
-    }).toThrow('Log path must be within');
-
-    expect(() => {
-      logger.setLogFilePath('/etc/passwd');
-    }).toThrow('Log path must be within');
+    }).toThrow('path traversal');
 
     expect(() => {
       logger.setLogFilePath('logs/../../../sensitive.log');
-    }).toThrow('Log path must be within');
+    }).toThrow('path traversal');
+  });
+
+  test('should allow absolute paths', () => {
+    expect(() => {
+      logger.setLogFilePath('/tmp/koatty-test/app.log');
+    }).not.toThrow();
+
+    expect(() => {
+      logger.setLogFilePath('/tmp/koatty-test2/test.log');
+    }).not.toThrow();
   });
 
   test('should prevent log injection attacks', () => {

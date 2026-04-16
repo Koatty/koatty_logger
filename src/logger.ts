@@ -408,25 +408,28 @@ export class Logger implements ILogger {
       throw new Error('Log path cannot be empty');
     }
 
-    // 规范化路径
     const normalizedPath = path.normalize(logPath);
 
-    // 如果是相对路径，基于baseLogDir解析
-    const resolvedPath = path.isAbsolute(normalizedPath)
-      ? normalizedPath
-      : path.resolve(this.baseLogDir, normalizedPath);
-
-    // 确保路径在允许的目录内
-    if (!resolvedPath.startsWith(this.baseLogDir)) {
-      throw new Error(`Log path must be within ${this.baseLogDir}`);
+    if (normalizedPath.includes('..')) {
+      throw new Error('Log path must not contain path traversal sequences');
     }
 
-    // 过滤危险字符
-    if (/[<>:"|?*\x00-\x1f]/.test(normalizedPath)) {
+    if (!path.isAbsolute(normalizedPath)) {
+      const resolvedPath = path.resolve(this.baseLogDir, normalizedPath);
+      if (!resolvedPath.startsWith(this.baseLogDir)) {
+        throw new Error(`Relative log path must be within ${this.baseLogDir}`);
+      }
+      if (/[<>:"|?*\x00-\x1f]/.test(normalizedPath)) {
+        throw new Error('Log path contains invalid characters');
+      }
+      return resolvedPath;
+    }
+
+    if (/[<>|?*\x00-\x1f]/.test(normalizedPath)) {
       throw new Error('Log path contains invalid characters');
     }
 
-    return resolvedPath;
+    return normalizedPath;
   }
 
   /**

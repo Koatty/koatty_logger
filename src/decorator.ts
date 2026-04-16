@@ -114,10 +114,27 @@ export function unregisterLogDecorator(): void {
 }
 
 /**
+ * Inline dual field decorator helper (avoids koatty_container dependency).
+ * Detects TC39 vs legacy calling convention at runtime and routes accordingly.
+ */
+function createDualField(
+  legacyHandler: (target: object, key: string | symbol) => void | PropertyDescriptor,
+  tc39Handler: (context: any) => ((init: any) => any) | void
+) {
+  return (...args: any[]) => {
+    if (args.length === 2 && args[1] && typeof args[1] === 'object' && 'kind' in args[1]) {
+      return tc39Handler(args[1]);
+    }
+    return legacyHandler(args[0], args[1]);
+  };
+}
+
+/**
  * Property decorator: inject a logger instance.
  * - @Log() uses the global DefaultLogger.
  * - @Log(options) uses a dedicated Logger instance with the given options (cached per class+property).
  *
+ * Supports both legacy and TC39 field decorator calling conventions.
  * Requires registerLogDecorator(decoratorManager.property) to be called first;
  * otherwise the decorator is a no-op so existing code is not broken.
  *
@@ -135,19 +152,39 @@ export function unregisterLogDecorator(): void {
  * }
  * ```
  */
-export function Log(options?: LoggerOpt): PropertyDecorator {
-  return (target: object, propertyKey: string | symbol): void | PropertyDescriptor => {
-    const pm = storedPropertyManager;
-    if (!pm || typeof pm.registerDecorator !== "function") {
-      return;
-    }
-    try {
-      return pm.registerDecorator(target, propertyKey, {
-        wrapperTypes: [LOG_DECORATOR_TYPE],
-        config: options
+export function Log(options?: LoggerOpt) {
+  return createDualField(
+    (target: object, propertyKey: string | symbol): void | PropertyDescriptor => {
+      const pm = storedPropertyManager;
+      if (!pm || typeof pm.registerDecorator !== "function") {
+        return;
+      }
+      try {
+        return pm.registerDecorator(target, propertyKey, {
+          wrapperTypes: [LOG_DECORATOR_TYPE],
+          config: options
+        });
+      } catch {
+        return;
+      }
+    },
+    (context: any) => {
+      const fieldName = String(context.name);
+      context.addInitializer(function (this: any) {
+        const pm = storedPropertyManager;
+        if (!pm || typeof pm.registerDecorator !== "function") {
+          return;
+        }
+        try {
+          const proto = Object.getPrototypeOf(this);
+          pm.registerDecorator(proto, fieldName, {
+            wrapperTypes: [LOG_DECORATOR_TYPE],
+            config: options
+          });
+        } catch {
+          // no-op
+        }
       });
-    } catch {
-      return;
     }
-  };
+  );
 }

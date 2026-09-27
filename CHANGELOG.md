@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - koatty_lib@1.6.0
+
 ## 2.9.0
 
 ### Minor Changes
@@ -19,6 +26,7 @@
 
 - build
 - Phase 1: Critical bug fixes
+
   - **koatty-container**: Replace global.**KOATTY_IOC** with Symbol.for to prevent global namespace pollution (TASK-1-7)
   - **koatty-logger**: Fix incorrect log level mapping - warning should map to warn, not error (TASK-1-5)
   - **koatty-typeorm**: Remove hardcoded database credentials security vulnerability (TASK-1-3)

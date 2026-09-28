@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Phase A–D completion
+
+- 格式化异常返回固定脱敏文本，不再递归调用同一个格式化器，避免无限输出与内存耗尽。
+
+本轮尚未发布；验收边界见根目录 `docs/audits/phase-ad-completion-2026-09-28.md`。
+
 ## 3.1.1
 
 ### Patch Changes

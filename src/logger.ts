@@ -687,10 +687,10 @@ export class Logger implements ILogger {
       // }
 
       return util.format.apply(null, params);
-    } catch (e) {
-      // console.error(e.stack);
-      this.logger.error(e.stack);
-      return "";
+    } catch {
+      // Logging through the same formatter here recurses indefinitely on a bad
+      // value or broken formatter. Keep this fallback bounded and data-free.
+      return "[Koatty logger: unable to format log entry]";
     }
   }
 

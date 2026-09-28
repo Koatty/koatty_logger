@@ -314,25 +314,19 @@ describe('Logger Batch Writing Tests', () => {
     });
   });
 
-  test('should flush on timer interval', (done) => {
-    logger.setBatchConfig({
-      enabled: true,
-      maxSize: 100,
-      flushInterval: 100,
-      maxWaitTime: 200
-    });
-
-    // 添加一些日志
-    logger.info('timer test 1');
-    logger.info('timer test 2');
-    
-    expect(logger.getBatchStatus().bufferSize).toBe(2);
-
-    // 等待定时器触发
-    setTimeout(() => {
+  test('should flush on timer interval', async () => {
+    jest.useFakeTimers();
+    try {
+      logger.setBatchConfig({ enabled: true, maxSize: 100, flushInterval: 100, maxWaitTime: 200 });
+      logger.info('timer test 1');
+      logger.info('timer test 2');
+      expect(logger.getBatchStatus().bufferSize).toBe(2);
+      await jest.advanceTimersByTimeAsync(250);
       expect(logger.getBatchStatus().bufferSize).toBe(0);
-      done();
-    }, 250);
+    } finally {
+      logger.destroy();
+      jest.useRealTimers();
+    }
   });
 
   test('should handle batch config updates', () => {

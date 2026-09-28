@@ -49,6 +49,52 @@ Creates an instance of Logger.
 </td></tr>
 </tbody></table>
 
+## Properties
+
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[isDebugEnabled](./koatty_logger.logger.isdebugenabled.md)
+
+
+</td><td>
+
+`readonly`
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+isDebugEnabled - hot-path guard for debug logging (PERF-02). Checking this flag before building log arguments avoids paying the string/serialization cost of `Logger.Debug(...)` when debug output is disabled — measurable on per-request logging paths.
+
+
+</td></tr>
+</tbody></table>
+
 ## Methods
 
 <table><thead><tr><th>

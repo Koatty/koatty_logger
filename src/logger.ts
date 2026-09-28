@@ -157,6 +157,16 @@ export class Logger implements ILogger {
   }
 
   /**
+   * isDebugEnabled - hot-path guard for debug logging (PERF-02).
+   * Checking this flag before building log arguments avoids paying the
+   * string/serialization cost of `Logger.Debug(...)` when debug output is
+   * disabled — measurable on per-request logging paths.
+   */
+  public get isDebugEnabled(): boolean {
+    return this.enableLog && this.logLevel === "debug";
+  }
+
+  /**
    * setLevel
    */
   public setLevel(level: LogLevelType) {

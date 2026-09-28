@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.1
+
+### Patch Changes
+
+- Added isDebugEnabled getter so hot paths can skip building debug log strings (PERF-02).
+
 ## 3.0.1
 
 ### Patch Changes

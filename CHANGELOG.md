@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.1
+
+### Patch Changes
+
+- Removed winston transport handleExceptions: the application layer (Koatty captureError) owns uncaughtException/unhandledRejection handling; winston also handling them created two competing handlers and winston scheduled process.exit(1) from a timer, randomly killing test runners.
+
+- Updated dependencies
+
 ## 3.1.0
 
 ### Minor Changes

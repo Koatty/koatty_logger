@@ -47,11 +47,15 @@ const DEFAULT_SENS_FIELDS: string[] = [
 ];
 
 // defaultLoggerOpt
+// NOTE: `handleExceptions` is deliberately NOT enabled. The application layer
+// (Koatty `captureError`) owns uncaughtException/unhandledRejection handling;
+// letting winston also handle them creates two competing handlers, and
+// winston's handler schedules `process.exit(1)` from a timer — which
+// randomly killed test runners and raced the framework's own handler.
 const defaultLoggerOpt = {
   File: {
     level: "info",
     filename: "./logs/log.log",
-    handleExceptions: true,
     json: true,
     datePattern: 'YYYY-MM-DD-HH',
     // zippedArchive: true,
@@ -62,7 +66,6 @@ const defaultLoggerOpt = {
   },
   Console: {
     level: "debug",
-    handleExceptions: true,
     json: true,
     colorize: true,
     timestamp: true

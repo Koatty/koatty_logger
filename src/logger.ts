@@ -28,6 +28,24 @@ export interface LoggerOpt {
   batchConfig?: BatchConfig;     // 批量写入配置
 }
 
+/**
+ * SEC-13 / B-12: 内置默认敏感字段（口令、令牌、Cookie 等），默认脱敏；
+ * 用户可通过 `LoggerOpt.sensFields` 追加，或用 clearSensFields() /
+ * resetSensFields() 清空或重置。
+ */
+const DEFAULT_SENS_FIELDS: string[] = [
+  "password",
+  "passwd",
+  "secret",
+  "token",
+  "accessToken",
+  "refreshToken",
+  "authorization",
+  "cookie",
+  "apiKey",
+  "api_key",
+];
+
 // defaultLoggerOpt
 const defaultLoggerOpt = {
   File: {
@@ -68,7 +86,7 @@ export class Logger implements ILogger {
   // 文件日志
   private logFilePath = "";
   // 脱敏字段
-  private sensFields: Set<string> = new Set();
+  private sensFields: Set<string> = new Set(DEFAULT_SENS_FIELDS);
   // 基础日志目录，用于安全验证
   private readonly baseLogDir = path.resolve(process.cwd(), "logs");
 
@@ -101,7 +119,11 @@ export class Logger implements ILogger {
     if (!helper.isTrueEmpty(opt) && opt) {
       this.logLevel = opt.logLevel ?? this.logLevel;
       this.logFilePath = opt.logFilePath ?? this.logFilePath;
-      this.sensFields = opt.sensFields ?? this.sensFields;
+      // SEC-13：内置默认字段之上追加用户字段
+      // （需要清空时用 clearSensFields() / resetSensFields()）
+      if (opt.sensFields) {
+        this.sensFields = new Set([...this.sensFields, ...opt.sensFields]);
+      }
       
       // 配置批量写入
       if (opt.batchConfig) {

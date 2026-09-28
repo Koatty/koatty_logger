@@ -11,3 +11,4 @@ jest_html_reporters.html
 jest-html-reporters-attach
 .turbo/
 docs/api/*.md
+tsconfig.tsbuildinfo

@@ -101,11 +101,16 @@ describe('Logger Performance Tests', () => {
 
   test('should manage sensitive fields memory efficiently', () => {
     // 测试敏感字段内存管理
+    // B-12 / SEC-13: 内置常见敏感字段默认生效
     const initialSize = logger.getSensFields().size;
-    
-    // 添加字段
-    logger.setSensFields(['password', 'token']);
-    expect(logger.getSensFields().size).toBe(initialSize + 2);
+    expect(initialSize).toBeGreaterThan(0);
+    expect(logger.getSensFields().has('password')).toBe(true);
+    expect(logger.getSensFields().has('token')).toBe(true);
+
+    // 追加字段：已在默认集合中的字段不重复计数
+    logger.setSensFields(['password', 'token', 'creditCard']);
+    expect(logger.getSensFields().size).toBe(initialSize + 1);
+    expect(logger.getSensFields().has('creditCard')).toBe(true);
     
     // 清理字段
     logger.clearSensFields();

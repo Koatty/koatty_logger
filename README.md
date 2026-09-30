@@ -2,6 +2,8 @@
 
 企业级日志组件，专为 koatty 框架设计，具备强大的安全防护和性能优化特性。
 
+> **v3.1.2**: ships with the koatty 5.0.0 release family(依赖与 peer 对齐，供新包 koatty_mcp / koatty_llm / koatty_guard 复用)；无 API 变更。
+
 ## ✨ 特性
 
 ### 🔒 安全特性
